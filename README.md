@@ -14,7 +14,7 @@ CRUD nad entitetima u sistemu - hotelima, sobama i korisnicima (za korisnike sam
 
 ## Arhitektura sistema
 
-API gateway - mikroservis sa kojim komunicira klijentska aplikacija i koji delegira funkcionalnosti ostalim mikroservisima. Tehnologija: Go
+API gateway - mikroservis sa kojim komunicira klijentska aplikacija i koji delegira zahtjeve ostalim mikroservisima. Tehnologija: Go
 
 User auth service - mikroservis za autentifikaciju i autorizaciju korisnika. Tehnologije: Go, PostgreSQL baza
 
