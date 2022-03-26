@@ -16,13 +16,13 @@ var (
 		{Name: "Splendid"},
 	}
 	rooms = []model.Room{
-		{NumberOfBeds: 2, AirConditioned: true, HotelID: 1},
-		{NumberOfBeds: 4, AirConditioned: true, HotelID: 1},
-		{NumberOfBeds: 4, AirConditioned: false, HotelID: 1},
-		{NumberOfBeds: 3, AirConditioned: true, HotelID: 2},
-		{NumberOfBeds: 3, AirConditioned: false, HotelID: 2},
-		{NumberOfBeds: 5, AirConditioned: true, HotelID: 3},
-		{NumberOfBeds: 5, AirConditioned: true, HotelID: 3},
+		{NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1},
+		{NumberOfBeds: 4, Price: 200, AirConditioned: true, HasParkingSpace: true, HotelID: 1},
+		{NumberOfBeds: 4, Price: 130, AirConditioned: false, HasParkingSpace: false, HotelID: 1},
+		{NumberOfBeds: 3, Price: 90, AirConditioned: true, HasParkingSpace: false, HotelID: 2},
+		{NumberOfBeds: 3, Price: 80, AirConditioned: false, HasParkingSpace: false, HotelID: 2},
+		{NumberOfBeds: 5, Price: 420, AirConditioned: true, HasParkingSpace: false, HotelID: 3},
+		{NumberOfBeds: 5, Price: 530, AirConditioned: true, HasParkingSpace: true, HotelID: 3},
 	}
 )
 

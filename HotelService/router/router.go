@@ -13,5 +13,6 @@ func HandleRequests() {
 	router.HandleFunc("/test", handler.Test).Methods("GET")
 	router.HandleFunc("/hotels", handler.GetAllHotels).Methods("GET")
 	router.HandleFunc("/hotels/{id}/rooms", handler.GetAllRoomsForHotel).Methods("GET")
+	router.HandleFunc("/rooms/{id}", handler.GetRoom).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8081", router))
 }
