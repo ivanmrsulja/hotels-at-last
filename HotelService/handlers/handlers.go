@@ -24,7 +24,7 @@ func GetAllHotels(w http.ResponseWriter, r *http.Request) {
 	hotels := repository.GetAllHotels(r)
 	var hotelList []model.HotelDTO
 	for _, hotel := range hotels {
-		hotelList = append(hotelList, model.HotelDTO{Id: hotel.ID, Name: hotel.Name})
+		hotelList = append(hotelList, hotel.ToDTO())
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -37,7 +37,7 @@ func GetAllRoomsForHotel(w http.ResponseWriter, r *http.Request) {
 	rooms := repository.FindRoomsForHotel(r, uint(id))
 	var roomList []model.RoomDTO
 	for _, room := range rooms {
-		roomList = append(roomList, model.RoomDTO{Id: room.ID, NumberOfBeds: room.NumberOfBeds, Price: room.Price, AirConditioned: room.AirConditioned, HasParkingSpace: room.HasParkingSpace})
+		roomList = append(roomList, room.ToDTO())
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -47,10 +47,10 @@ func GetAllRoomsForHotel(w http.ResponseWriter, r *http.Request) {
 func GetRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, _ := strconv.ParseUint(params["id"], 10, 32)
-
 	room := repository.FindRoom(uint(id))
+	
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(model.RoomDTO{Id: room.ID, NumberOfBeds: room.NumberOfBeds, Price: room.Price, AirConditioned: room.AirConditioned, HasParkingSpace: room.HasParkingSpace})
+	json.NewEncoder(w).Encode(room.ToDTO())
 }
 
 func CreateRoomForHotel(w http.ResponseWriter, r *http.Request) {

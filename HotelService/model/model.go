@@ -15,6 +15,11 @@ type Room struct {
 	HotelID int
 }
 
+func (room *Room) ToDTO() RoomDTO {
+	return RoomDTO{Id: room.ID, NumberOfBeds: room.NumberOfBeds, Price: room.Price, AirConditioned: room.AirConditioned, HasParkingSpace: room.HasParkingSpace}
+}
+
+
 type Hotel struct {
 	gorm.Model
 
@@ -22,6 +27,6 @@ type Hotel struct {
 	Rooms []Room
 }
 
-func (h *Hotel) toDTO() HotelDTO{
-	return HotelDTO{h.ID, h.Name}
+func (hotel *Hotel) ToDTO() HotelDTO{
+	return HotelDTO{hotel.ID, hotel.Name}
 }
