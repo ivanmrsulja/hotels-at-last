@@ -11,18 +11,18 @@ import (
 
 var (
 	hotels = []model.Hotel{
-		{Name: "Hotel Lux"},
-		{Name: "Hotel Vardar"},
-		{Name: "Splendid"},
+		{Name: "Hotel Lux", Address: "Address1"},
+		{Name: "Hotel Vardar", Address: "Address2"},
+		{Name: "Splendid", Address: "Address3"},
 	}
 	rooms = []model.Room{
-		{NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1},
-		{NumberOfBeds: 4, Price: 200, AirConditioned: true, HasParkingSpace: true, HotelID: 1},
-		{NumberOfBeds: 4, Price: 130, AirConditioned: false, HasParkingSpace: false, HotelID: 1},
-		{NumberOfBeds: 3, Price: 90, AirConditioned: true, HasParkingSpace: false, HotelID: 2},
-		{NumberOfBeds: 3, Price: 80, AirConditioned: false, HasParkingSpace: false, HotelID: 2},
-		{NumberOfBeds: 5, Price: 420, AirConditioned: true, HasParkingSpace: false, HotelID: 3},
-		{NumberOfBeds: 5, Price: 530, AirConditioned: true, HasParkingSpace: true, HotelID: 3},
+		{NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},
+		{NumberOfBeds: 4, Price: 200, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},
+		{NumberOfBeds: 4, Price: 130, AirConditioned: false, HasParkingSpace: false, HotelID: 1, HasTV: true},
+		{NumberOfBeds: 3, Price: 90, AirConditioned: true, HasParkingSpace: false, HotelID: 2, HasTV: true},
+		{NumberOfBeds: 3, Price: 80, AirConditioned: false, HasParkingSpace: false, HotelID: 2, HasTV: true},
+		{NumberOfBeds: 5, Price: 420, AirConditioned: true, HasParkingSpace: false, HotelID: 3, HasTV: true},
+		{NumberOfBeds: 5, Price: 530, AirConditioned: true, HasParkingSpace: true, HotelID: 3, HasTV: true},
 	}
 )
 

@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"net/http"
 	"strconv"
 
@@ -32,7 +33,21 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 func GetAllHotels(r *http.Request) []model.Hotel {
 	var hotels []model.Hotel
 
-	utils.Db.Scopes(Paginate(r)).Find(&hotels)
+	name := "%" + r.URL.Query().Get("name") + "%"
+	address := "%" + r.URL.Query().Get("address") + "%"
+	bedsFrom, err1 := strconv.Atoi(r.URL.Query().Get("bedsFrom"))
+	bedsTo, err2 := strconv.Atoi(r.URL.Query().Get("bedsTo"))
+	priceFrom, err3 := strconv.ParseFloat(r.URL.Query().Get("priceFrom"), 64)
+	priceTo, err4 := strconv.ParseFloat(r.URL.Query().Get("priceTo"), 64)
+	airCond, err5 := strconv.ParseBool(r.URL.Query().Get("airCond"))
+	parking, err6 := strconv.ParseBool(r.URL.Query().Get("parking"))
+	tv, err7 := strconv.ParseBool(r.URL.Query().Get("tv"))
+
+	if err1 != nil || err2 != nil || err3 != nil || err4 != nil || err5 != nil || err6 != nil || err7 != nil {
+		utils.Db.Scopes(Paginate(r)).Find(&hotels)
+	} else {
+		utils.Db.Scopes(Paginate(r)).Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Find(&hotels)
+	}
 
 	return hotels
 }
@@ -53,4 +68,77 @@ func FindRoom(id uint) model.Room {
 	utils.Db.First(&room, id)
 
 	return room
+}
+
+func CreateHotel(newHotel model.Hotel) model.Hotel {
+	utils.Db.Create(&newHotel)
+	return newHotel
+}
+
+func CreateRoom(newRoom model.Room) model.Room {
+	utils.Db.Create(&newRoom)
+	return newRoom
+}
+
+func UpdateHotel(hotel model.Hotel, id uint) error {
+	var hotelToUpdate model.Hotel
+
+	utils.Db.First(&hotelToUpdate, id)
+	
+	if hotelToUpdate.ID == 0 {
+		return errors.New("Hotel with that ID does not exist.")
+	}
+
+	hotelToUpdate.Name = hotel.Name
+	hotelToUpdate.Address = hotel.Address
+	result := utils.Db.Save(&hotelToUpdate)
+
+	return result.Error
+}
+
+func UpdateRoom(room model.Room, id uint) error {
+	var roomToUpdate model.Room
+
+	utils.Db.First(&roomToUpdate, id)
+
+	if roomToUpdate.ID == 0 {
+		return errors.New("Room with that ID does not exist.")
+	}
+
+	roomToUpdate.Price = room.Price
+	roomToUpdate.AirConditioned = room.AirConditioned
+	roomToUpdate.HasParkingSpace = room.HasParkingSpace
+	roomToUpdate.NumberOfBeds = room.NumberOfBeds
+	roomToUpdate.HasTV = room.HasTV
+	result := utils.Db.Save(&roomToUpdate)
+
+	return result.Error
+}
+
+func DeleteHotel(id uint) error {
+	var hotel model.Hotel
+
+	utils.Db.First(&hotel, id)
+
+	if(hotel.ID == 0) {
+		return errors.New("Hotel with that ID does not exist")
+	}
+
+	utils.Db.Delete(&hotel)
+
+	return nil
+}
+
+func DeleteRoom(id uint) error {
+	var room model.Room
+
+	utils.Db.First(&room, id)
+
+	if(room.ID == 0) {
+		return errors.New("Room with that ID does not exist")
+	}
+
+	utils.Db.Delete(&room)
+
+	return nil
 }

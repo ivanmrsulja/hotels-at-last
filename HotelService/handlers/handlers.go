@@ -54,9 +54,88 @@ func GetRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateRoomForHotel(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
+	var roomDTO model.RoomDTO
+	json.NewDecoder(r.Body).Decode(&roomDTO)
+	
+	room := roomDTO.ToRoom()
+	room.HotelID = uint(hotelId)
 
+	createdRoom := repository.CreateRoom(room)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(createdRoom.ToDTO())
 }
 
 func CreateHotel(w http.ResponseWriter, r *http.Request) {
+	var hotelDTO model.HotelDTO
+	json.NewDecoder(r.Body).Decode(&hotelDTO)
+	hotel := hotelDTO.ToHotel()
+	createdHotel := repository.CreateHotel(hotel)
 
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(createdHotel.ToDTO())
+}
+
+func UpdateHotel(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
+	var hotelDTO model.HotelDTO
+	json.NewDecoder(r.Body).Decode(&hotelDTO)
+	hotel := hotelDTO.ToHotel()
+
+	err := repository.UpdateHotel(hotel, uint(hotelId))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func UpdateRoom(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
+	var roomDTO model.RoomDTO
+	json.NewDecoder(r.Body).Decode(&roomDTO)
+	room := roomDTO.ToRoom()
+
+	err := repository.UpdateRoom(room, uint(roomId))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func DeleteHotel(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
+
+	err := repository.DeleteHotel(uint(hotelId))
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func DeleteRoom(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
+
+	err := repository.DeleteRoom(uint(roomId))
+
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}	
 }
