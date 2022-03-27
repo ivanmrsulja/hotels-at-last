@@ -62,20 +62,30 @@ func CreateRoomForHotel(w http.ResponseWriter, r *http.Request) {
 	room := roomDTO.ToRoom()
 	room.HotelID = uint(hotelId)
 
-	createdRoom := repository.CreateRoom(room)
+	createdRoom, err := repository.CreateRoom(room)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(createdRoom.ToDTO())
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(createdRoom.ToDTO())
+	}
 }
 
 func CreateHotel(w http.ResponseWriter, r *http.Request) {
 	var hotelDTO model.HotelDTO
 	json.NewDecoder(r.Body).Decode(&hotelDTO)
 	hotel := hotelDTO.ToHotel()
-	createdHotel := repository.CreateHotel(hotel)
+	createdHotel, err := repository.CreateHotel(hotel)
 
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(createdHotel.ToDTO())
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(err.Error())
+	} else {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(createdHotel.ToDTO())
+	}
 }
 
 func UpdateHotel(w http.ResponseWriter, r *http.Request) {

@@ -8,8 +8,8 @@ import (
 type Room struct {
 	gorm.Model
 
-	NumberOfBeds int
-	Price float64
+	NumberOfBeds int `gorm:"minimum(1)"`
+	Price float64 `gorm:"min:0.0"`
 	AirConditioned bool
 	HasParkingSpace bool
 	HasTV bool
@@ -24,8 +24,8 @@ func (room *Room) ToDTO() RoomDTO {
 type Hotel struct {
 	gorm.Model
 
-	Name string
-	Address string
+	Name string `gorm:"not null;default:null"`
+	Address string `gorm:"not null;default:null"`
 	Rooms []Room
 }
 

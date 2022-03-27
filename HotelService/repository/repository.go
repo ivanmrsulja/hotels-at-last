@@ -70,14 +70,40 @@ func FindRoom(id uint) model.Room {
 	return room
 }
 
-func CreateHotel(newHotel model.Hotel) model.Hotel {
-	utils.Db.Create(&newHotel)
-	return newHotel
+func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
+	createdHotel := utils.Db.Create(&newHotel)
+
+	if createdHotel.Error != nil {
+		return newHotel, createdHotel.Error
+	}
+
+	return newHotel, nil
 }
 
-func CreateRoom(newRoom model.Room) model.Room {
-	utils.Db.Create(&newRoom)
-	return newRoom
+func CreateRoom(newRoom model.Room) (model.Room, error) {
+	var hotel model.Hotel
+
+	utils.Db.First(&hotel, newRoom.HotelID)
+
+	if hotel.ID == 0 {
+		return newRoom, errors.New("Hotel with that ID does not exist.")
+	}
+
+	if newRoom.Price <= 0 {
+		return newRoom, errors.New("Price must be greater than 0.")
+	}
+
+	if newRoom.NumberOfBeds <= 0 {
+		return newRoom, errors.New("Number of beds in a room must be greater than 0.")
+	}
+
+	createdRoom := utils.Db.Create(&newRoom)
+
+	if createdRoom.Error != nil {
+		return newRoom, createdRoom.Error
+	}
+
+	return newRoom, nil
 }
 
 func UpdateHotel(hotel model.Hotel, id uint) error {
@@ -103,6 +129,14 @@ func UpdateRoom(room model.Room, id uint) error {
 
 	if roomToUpdate.ID == 0 {
 		return errors.New("Room with that ID does not exist.")
+	}
+
+	if roomToUpdate.Price <= 0 {
+		return errors.New("Price must be greater than 0.")
+	}
+
+	if roomToUpdate.NumberOfBeds <= 0 {
+		return errors.New("Number of beds in a room must be greater than 0.")
 	}
 
 	roomToUpdate.Price = room.Price
