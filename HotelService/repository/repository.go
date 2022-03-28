@@ -62,12 +62,16 @@ func FindRoomsForHotel(r *http.Request, id uint) []model.Room {
 	return rooms
 }
 
-func FindRoom(id uint) model.Room {
+func FindRoom(id uint) (model.Room, error) {
 	var room model.Room
 
 	utils.Db.First(&room, id)
 
-	return room
+	if room.ID == 0 {
+		return room, errors.New("Room with that ID does not exist")
+	}
+
+	return room, nil
 }
 
 func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
