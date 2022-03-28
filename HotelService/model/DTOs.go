@@ -22,3 +22,8 @@ type RoomDTO struct {
 func (r *RoomDTO) ToRoom() Room {
 	return Room{NumberOfBeds: r.NumberOfBeds, Price: r.Price, AirConditioned: r.AirConditioned, HasParkingSpace: r.HasParkingSpace, HasTV: r.HasTV}
 }
+
+type ErrorResponse struct {
+	Message    string `json:"Message"`
+	StatusCode int    `json:"StatusCode"`
+}

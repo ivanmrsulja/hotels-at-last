@@ -68,7 +68,7 @@ func FindRoom(id uint) (model.Room, error) {
 	utils.Db.First(&room, id)
 
 	if room.ID == 0 {
-		return room, errors.New("Room with that ID does not exist")
+		return room, errors.New("Room with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist")
 	}
 
 	return room, nil
@@ -90,7 +90,7 @@ func CreateRoom(newRoom model.Room) (model.Room, error) {
 	utils.Db.First(&hotel, newRoom.HotelID)
 
 	if hotel.ID == 0 {
-		return newRoom, errors.New("Hotel with that ID does not exist.")
+		return newRoom, errors.New("Hotel with ID " + strconv.FormatUint(uint64(newRoom.HotelID), 10) + " does not exist.")
 	}
 
 	if newRoom.Price <= 0 {
@@ -116,7 +116,7 @@ func UpdateHotel(hotel model.Hotel, id uint) error {
 	utils.Db.First(&hotelToUpdate, id)
 	
 	if hotelToUpdate.ID == 0 {
-		return errors.New("Hotel with that ID does not exist.")
+		return errors.New("Hotel with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist.")
 	}
 
 	hotelToUpdate.Name = hotel.Name
@@ -132,7 +132,7 @@ func UpdateRoom(room model.Room, id uint) error {
 	utils.Db.First(&roomToUpdate, id)
 
 	if roomToUpdate.ID == 0 {
-		return errors.New("Room with that ID does not exist.")
+		return errors.New("Room with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist.")
 	}
 
 	if roomToUpdate.Price <= 0 {
@@ -159,7 +159,7 @@ func DeleteHotel(id uint) error {
 	utils.Db.First(&hotel, id)
 
 	if(hotel.ID == 0) {
-		return errors.New("Hotel with that ID does not exist")
+		return errors.New("Hotel with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist")
 	}
 
 	utils.Db.Delete(&hotel)
@@ -173,7 +173,7 @@ func DeleteRoom(id uint) error {
 	utils.Db.First(&room, id)
 
 	if(room.ID == 0) {
-		return errors.New("Room with that ID does not exist")
+		return errors.New("Room with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist")
 	}
 
 	utils.Db.Delete(&room)
