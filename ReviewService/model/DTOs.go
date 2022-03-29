@@ -9,6 +9,18 @@ type ReviewDTO struct {
 	UserUsername  string `json:"UserName"`
 }
 
-func (review *ReviewDTO) toReview() Review {
-	return Review{Comment: review.Comment, Rating: review.Rating, TimesReported: review.TimesReported, UserId: review.UserId, UserUsername: review.UserUsername}
+type ReviewCreateRequestDTO struct {
+	Comment string `json:"Comment"`
+	Rating  int    `json:"Rating"`
+	UserId  uint   `json:"UserId"`
+	RoomId  uint   `json:"RoomId"`
+}
+
+func (review *ReviewCreateRequestDTO) ToReview() Review {
+	return Review{Comment: review.Comment, Rating: review.Rating, TimesReported: 0, UserId: review.UserId, UserUsername: "", RoomId: review.RoomId}
+}
+
+type ErrorResponse struct {
+	Message    string `json:"Message"`
+	StatusCode int    `json:"StatusCode"`
 }
