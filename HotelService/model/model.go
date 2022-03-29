@@ -26,10 +26,11 @@ type Hotel struct {
 
 	Name string `gorm:"not null;default:null"`
 	Address string `gorm:"not null;default:null"`
+	Description string `gorm:"not null;default:null"`
 	Base64Image string `gorm:"not null;default:null"`
 	Rooms []Room
 }
 
 func (hotel *Hotel) ToDTO() HotelDTO{
-	return HotelDTO{hotel.ID, hotel.Name, hotel.Address, hotel.Base64Image}
+	return HotelDTO{hotel.ID, hotel.Name, hotel.Address, hotel.Base64Image, hotel.Description}
 }

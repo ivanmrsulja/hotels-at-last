@@ -4,11 +4,12 @@ type HotelDTO struct {
 	Id          uint   `json:"Id"`
 	Name        string `json:"Name"`
 	Address     string `json:"Address"`
+	Description string `json:"Description"`
 	Base64Image string `json:"Base64Image"`
 }
 
 func (h *HotelDTO) ToHotel() Hotel {
-	return Hotel{Name: h.Name, Address: h.Address, Base64Image: h.Base64Image}
+	return Hotel{Name: h.Name, Address: h.Address, Base64Image: h.Base64Image, Description: h.Description}
 }
 
 type RoomDTO struct {

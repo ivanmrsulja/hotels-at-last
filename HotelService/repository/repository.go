@@ -121,6 +121,7 @@ func UpdateHotel(hotel model.Hotel, id uint) error {
 
 	hotelToUpdate.Name = hotel.Name
 	hotelToUpdate.Address = hotel.Address
+	hotelToUpdate.Description = hotel.Description
 	if hotel.Base64Image != "" {
 		hotelToUpdate.Base64Image = hotel.Base64Image
 	}
