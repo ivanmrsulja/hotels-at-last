@@ -121,6 +121,9 @@ func UpdateHotel(hotel model.Hotel, id uint) error {
 
 	hotelToUpdate.Name = hotel.Name
 	hotelToUpdate.Address = hotel.Address
+	if hotel.Base64Image != "" {
+		hotelToUpdate.Base64Image = hotel.Base64Image
+	}
 	result := utils.Db.Save(&hotelToUpdate)
 
 	return result.Error

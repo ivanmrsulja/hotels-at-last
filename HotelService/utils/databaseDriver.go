@@ -11,9 +11,9 @@ import (
 
 var (
 	hotels = []model.Hotel{
-		{Name: "Hotel Lux", Address: "Address1"},
-		{Name: "Hotel Vardar", Address: "Address2"},
-		{Name: "Splendid", Address: "Address3"},
+		{Name: "Hotel Lux", Address: "Address1", Base64Image: "Image"},
+		{Name: "Hotel Vardar", Address: "Address2", Base64Image: "Image"},
+		{Name: "Splendid", Address: "Address3", Base64Image: "Image"},
 	}
 	rooms = []model.Room{
 		{NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},

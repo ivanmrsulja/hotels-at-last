@@ -1,13 +1,14 @@
 package model
 
 type HotelDTO struct {
-	Id      uint   `json:"Id"`
-	Name    string `json:"Name"`
-	Address string `json:"Address"`
+	Id          uint   `json:"Id"`
+	Name        string `json:"Name"`
+	Address     string `json:"Address"`
+	Base64Image string `json:"Base64Image"`
 }
 
 func (h *HotelDTO) ToHotel() Hotel {
-	return Hotel{Name: h.Name, Address: h.Address}
+	return Hotel{Name: h.Name, Address: h.Address, Base64Image: h.Base64Image}
 }
 
 type RoomDTO struct {
