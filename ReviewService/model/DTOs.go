@@ -24,3 +24,11 @@ type ErrorResponse struct {
 	Message    string `json:"Message"`
 	StatusCode int    `json:"StatusCode"`
 }
+
+type UserDTO struct {
+	Id       uint   `json:"Id"`
+	Email    string `json:"Email"`
+	Username string `json:"Username"`
+	Name     string `json:"Name"`
+	Surname  string `json:"Surname"`
+}

@@ -11,10 +11,13 @@ import (
 func HandleRequests() {
 	router := mux.NewRouter()
 	router.HandleFunc("/api/users/login", handler.Login).Methods("POST")
+	router.HandleFunc("/api/users/register", handler.Register).Methods("POST")
 
 	router.HandleFunc("/api/users/authorize/admin", handler.AuthoriseAdmin).Methods("GET")
 	router.HandleFunc("/api/users/authorize/user", handler.AuthoriseUser).Methods("GET")
 	router.HandleFunc("/api/users/{id}", handler.FindUser).Methods("GET")
+
+	router.HandleFunc("/api/users/{id}/ban", handler.BanUser).Methods("PATCH")
 
 	log.Fatal(http.ListenAndServe(":8083", router))
 }

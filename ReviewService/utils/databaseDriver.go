@@ -12,8 +12,8 @@ import (
 var (
 	reviews = []model.Review{
 		{Comment: "Ovo je najjaci hotel nasvijet!", Rating: 4, TimesReported: 0, UserId: 3, RoomId: 1, UserUsername: "skafiskafnjak"},
-		{Comment: "UZELI STE MI PARE MAJKU VAM [REDACTED]!", Rating: 1, TimesReported: 4, UserId: 2, RoomId: 2, UserUsername: "hater"},
-		{Comment: "Bila je svadba i djani je izasao iz torte, sve nas je isprljao.", Rating: 2, TimesReported: 0, UserId: 1, RoomId: 1, UserUsername: "makulica"},
+		{Comment: "UZELI STE MI PARE MAJKU VAM [REDACTED]!", Rating: 1, TimesReported: 4, UserId: 3, RoomId: 2, UserUsername: "skafiskafnjak"},
+		{Comment: "Bila je svadba i djani je izasao iz torte, sve nas je isprljao.", Rating: 2, TimesReported: 0, UserId: 2, RoomId: 1, UserUsername: "makulica"},
 	}
 )
 

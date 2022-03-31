@@ -33,8 +33,6 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
 }
 
 func CreateReview(review model.Review) (model.Review, error) {
-	// TODO: Treba dodati provjeru da li korisnik postoji i setovati username
-	
 	trimmedComment := strings.Trim(review.Comment, " ")
 	if trimmedComment == "" {
 		return review, errors.New("You need to insert a comment.")
@@ -51,7 +49,16 @@ func CreateReview(review model.Review) (model.Review, error) {
 		return review, errors.New(err.Message)
 	}
 
-	review.UserUsername = "IZMENI IZMENI IZMENI"
+	responseUser, _ := http.Get("http://localhost:8083/api/users/" + strconv.FormatUint(uint64(review.UserId), 10))
+	if responseUser.StatusCode != 200 {
+		var err model.ErrorResponse
+		json.NewDecoder(responseUser.Body).Decode(&err)
+		return review, errors.New(err.Message)
+	}
+
+	var user model.UserDTO
+	json.NewDecoder(responseUser.Body).Decode(&user)
+	review.UserUsername = user.Username
 	createdReview := utils.Db.Create(&review)
 
 	if createdReview.Error != nil {

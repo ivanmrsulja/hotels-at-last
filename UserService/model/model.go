@@ -16,6 +16,7 @@ const (
 type User struct {
 	gorm.Model
 	Email string
+	Username string
 	Password string
 	Name string
 	Surname string
@@ -24,5 +25,5 @@ type User struct {
 }
 
 func (user *User) ToDTO() UserDTO {
-	return UserDTO{Id: user.ID, Email: user.Email, Name: user.Name, Surname: user.Surname}
+	return UserDTO{Id: user.ID, Email: user.Email, Username: user.Username, Name: user.Name, Surname: user.Surname}
 }

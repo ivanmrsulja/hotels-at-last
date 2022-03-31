@@ -13,6 +13,7 @@ import (
 	repository "github.com/ivanmrsulja/hotels-at-last/user-service/repository"
 )
 
+// This should be stored as an envinroinment variable
 var jwtKey = []byte("z7031Q8Qy9zVO-T2o7lsFIZSrd05hH0PaeaWIBvLh9s")
 
 func Login(w http.ResponseWriter, r *http.Request) {
@@ -38,7 +39,18 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	
+	var userDTO model.CreateUserRequest
+	json.NewDecoder(r.Body).Decode(&userDTO)
+
+	createdUser, err := repository.CreateUser(userDTO.ToUser())
+
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusBadRequest})
+	} else {
+		json.NewEncoder(w).Encode(createdUser.ToDTO())
+	}
 }
 
 func AuthoriseAdmin(w http.ResponseWriter, r *http.Request) {
@@ -97,5 +109,27 @@ func FindUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func BanUser(w http.ResponseWriter, r *http.Request) {
-	
+	params := mux.Vars(r)
+	userId, _ := strconv.ParseUint(params["id"], 10, 32)
+	var banRequest model.BanUserRequest
+	json.NewDecoder(r.Body).Decode(&banRequest)
+
+	endOfBan, parseErr := time.Parse("2006-01-02", banRequest.EndOfBan)
+
+	if parseErr != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: parseErr.Error(), StatusCode: http.StatusBadRequest})
+		return
+	}
+
+	err := repository.BanUser(uint(userId), endOfBan)
+
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusNotFound})
+	} else {
+		w.WriteHeader(http.StatusNoContent)
+	}
 }
