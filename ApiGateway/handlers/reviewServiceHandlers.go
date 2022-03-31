@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"io"
 	"net/http"
 	"strconv"
 
@@ -17,11 +16,7 @@ func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
 	
 	response, _ := http.Get("http://localhost:8082/api/reviews/rooms/" + strconv.FormatUint(uint64(roomId), 10) + "?page=" + page + "&size=" + size)
 	
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }
 
 func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
@@ -35,11 +30,7 @@ func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 	
 	response, _ := http.Get("http://localhost:8082/api/reviews/reported?page=" + page + "&size=" + size)
 	
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }
 
 func GetAverageRatingForRoom(w http.ResponseWriter, r *http.Request) {
@@ -47,11 +38,7 @@ func GetAverageRatingForRoom(w http.ResponseWriter, r *http.Request) {
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 	response, _ := http.Get("http://localhost:8082/api/reviews/rating/" + strconv.FormatUint(uint64(roomId), 10))
 	
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }
 
 func CreateReview(w http.ResponseWriter, r *http.Request) {
@@ -65,11 +52,7 @@ func CreateReview(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 	response, _ := client.Do(req)
 
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }
 
 func ReportReview(w http.ResponseWriter, r *http.Request) {
@@ -86,11 +69,7 @@ func ReportReview(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 	response, _ := client.Do(req)
 
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }
 
 func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
@@ -107,11 +86,7 @@ func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 	response, _ := client.Do(req)
 
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }
 
 func DeleteReview(w http.ResponseWriter, r *http.Request) {
@@ -128,9 +103,5 @@ func DeleteReview(w http.ResponseWriter, r *http.Request) {
 	client := &http.Client{}
 	response, _ := client.Do(req)
 
-	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
-    w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
-	w.WriteHeader(response.StatusCode)
-    io.Copy(w, response.Body)
-    response.Body.Close()
+	utils.DelegateResponse(response, w)
 }

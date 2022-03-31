@@ -55,7 +55,7 @@ func CheckCredentials(email string, password string) (model.User, error) {
 	utils.Db.Table("users").Where("email = ? AND password = ?", email, password).First(&user)
 
 	if user.ID == 0 {
-		return user, errors.New("Invalid username or password or user is banned.")
+		return user, errors.New("Invalid username or password.")
 	}
 
 	if time.Now().Before(user.BannedUntil)  {
