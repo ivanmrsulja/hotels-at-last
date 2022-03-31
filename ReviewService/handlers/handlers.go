@@ -60,7 +60,7 @@ func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
 
 func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 	reviews := repository.GetAllReportedReviews(r)
-	var reviewList []model.ReviewDTO
+	reviewList := []model.ReviewDTO{}
 	for _, review := range reviews {
 		reviewList = append(reviewList, review.ToDTO())
 	}
@@ -74,7 +74,7 @@ func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 
 	reviews := repository.GetAllReviewsForRoom(r, uint(roomId))
-	var reviewList []model.ReviewDTO
+	reviewList := []model.ReviewDTO{}
 	for _, review := range reviews {
 		reviewList = append(reviewList, review.ToDTO())
 	}

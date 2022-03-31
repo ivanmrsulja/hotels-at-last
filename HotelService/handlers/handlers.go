@@ -22,7 +22,7 @@ func Test(w http.ResponseWriter, r *http.Request) {
 
 func GetAllHotels(w http.ResponseWriter, r *http.Request) {
 	hotels := repository.GetAllHotels(r)
-	var hotelList []model.HotelDTO
+	hotelList := []model.HotelDTO{}
 	for _, hotel := range hotels {
 		hotelList = append(hotelList, hotel.ToDTO())
 	}
@@ -35,7 +35,7 @@ func GetAllRoomsForHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, _ := strconv.ParseUint(params["id"], 10, 32)
 	rooms := repository.FindRoomsForHotel(r, uint(id))
-	var roomList []model.RoomDTO
+	roomList := []model.RoomDTO{}
 	for _, room := range rooms {
 		roomList = append(roomList, room.ToDTO())
 	}
