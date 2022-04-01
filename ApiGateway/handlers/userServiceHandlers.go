@@ -9,7 +9,7 @@ import (
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8083/api/users/login", r.Body)
+	req, _ := http.NewRequest(http.MethodPost, utils.BaseUserServicePath + "/api/users/login", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -23,7 +23,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8083/api/users/register", r.Body)
+	req, _ := http.NewRequest(http.MethodPost, utils.BaseUserServicePath + "/api/users/register", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -40,7 +40,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	response, err := http.Get("http://localhost:8083/api/users/" + strconv.FormatUint(uint64(userId), 10))
+	response, err := http.Get(utils.BaseUserServicePath + "/api/users/" + strconv.FormatUint(uint64(userId), 10))
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -54,7 +54,7 @@ func BanUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	response, err := http.Get("http://localhost:8083/api/users/" + strconv.FormatUint(uint64(userId), 10) + "/ban")
+	response, err := http.Get(utils.BaseUserServicePath + "/api/users/" + strconv.FormatUint(uint64(userId), 10) + "/ban")
 	
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)

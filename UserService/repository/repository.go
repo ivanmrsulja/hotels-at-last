@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"net/mail"
 	"strconv"
 	"time"
 
@@ -37,6 +38,12 @@ func BanUser(id uint, endDate time.Time) error {
 }
 
 func CreateUser(user model.User) (model.User, error) {
+
+	_, err := mail.ParseAddress(user.Email)
+
+	if err != nil {
+		return user, errors.New("Email format is not valid.")
+	}
 
 	user.Role = model.USER
 	user.BannedUntil = time.Now()

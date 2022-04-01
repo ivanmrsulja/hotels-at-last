@@ -21,7 +21,7 @@ func GetAllHotels(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	address := r.URL.Query().Get("address")
 
-	response, err := http.Get("http://localhost:8081/api/hotels?page=" + page + "&size=" + size + "&bedsFrom=" + bedsFrom + "&bedsTo=" + bedsTo + "&priceFrom=" + priceFrom + "&priceTo=" + priceTo + "&airCond=" + airCond + "&parking=" + parking + "&tv=" + tv + "&name=" + name + "&address=" + address)
+	response, err := http.Get(utils.BaseHotelServicePath + "/api/hotels?page=" + page + "&size=" + size + "&bedsFrom=" + bedsFrom + "&bedsTo=" + bedsTo + "&priceFrom=" + priceFrom + "&priceTo=" + priceTo + "&airCond=" + airCond + "&parking=" + parking + "&tv=" + tv + "&name=" + name + "&address=" + address)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -37,7 +37,7 @@ func GetAllRoomsForHotel(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	size := r.URL.Query().Get("size")
 
-	response, err := http.Get("http://localhost:8081/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10) + "/rooms?page=" + page + "&size=" + size)
+	response, err := http.Get(utils.BaseHotelServicePath + "/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10) + "/rooms?page=" + page + "&size=" + size)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -51,7 +51,7 @@ func GetRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	response, err := http.Get("http://localhost:8081/api/rooms/" + strconv.FormatUint(uint64(roomId), 10))
+	response, err := http.Get(utils.BaseHotelServicePath + "/api/rooms/" + strconv.FormatUint(uint64(roomId), 10))
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -62,7 +62,7 @@ func GetRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateHotel(w http.ResponseWriter, r *http.Request) {
-	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8081/api/hotels", r.Body)
+	req, _ := http.NewRequest(http.MethodPost, utils.BaseHotelServicePath + "/api/hotels", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -79,7 +79,7 @@ func CreateRoomForHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8081/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10) + "/rooms", r.Body)
+	req, _ := http.NewRequest(http.MethodPost, utils.BaseHotelServicePath + "/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10) + "/rooms", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -96,7 +96,7 @@ func UpdateHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodPut, "http://localhost:8081/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10) , r.Body)
+	req, _ := http.NewRequest(http.MethodPut, utils.BaseHotelServicePath + "/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10) , r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -113,7 +113,7 @@ func UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodPut, "http://localhost:8081/api/rooms/" + strconv.FormatUint(uint64(roomId), 10) , r.Body)
+	req, _ := http.NewRequest(http.MethodPut, utils.BaseHotelServicePath + "/api/rooms/" + strconv.FormatUint(uint64(roomId), 10) , r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -130,7 +130,7 @@ func DeleteHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodDelete, "http://localhost:8081/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10), r.Body)
+	req, _ := http.NewRequest(http.MethodDelete, utils.BaseHotelServicePath + "/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10), r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -147,7 +147,7 @@ func DeleteRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodDelete, "http://localhost:8081/api/rooms/" + strconv.FormatUint(uint64(roomId), 10), r.Body)
+	req, _ := http.NewRequest(http.MethodDelete, utils.BaseHotelServicePath + "/api/rooms/" + strconv.FormatUint(uint64(roomId), 10), r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)

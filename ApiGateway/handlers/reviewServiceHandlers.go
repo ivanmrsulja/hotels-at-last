@@ -14,7 +14,7 @@ func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	size := r.URL.Query().Get("size")
 	
-	response, err := http.Get("http://localhost:8082/api/reviews/rooms/" + strconv.FormatUint(uint64(roomId), 10) + "?page=" + page + "&size=" + size)
+	response, err := http.Get(utils.BaseReviewServicePath + "/api/reviews/rooms/" + strconv.FormatUint(uint64(roomId), 10) + "?page=" + page + "&size=" + size)
 	
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -33,7 +33,7 @@ func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	size := r.URL.Query().Get("size")
 	
-	response, err := http.Get("http://localhost:8082/api/reviews/reported?page=" + page + "&size=" + size)
+	response, err := http.Get(utils.BaseReviewServicePath + "/api/reviews/reported?page=" + page + "&size=" + size)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -46,7 +46,7 @@ func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 func GetAverageRatingForRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
-	response, err := http.Get("http://localhost:8082/api/reviews/rating/" + strconv.FormatUint(uint64(roomId), 10))
+	response, err := http.Get(utils.BaseReviewServicePath + "/api/reviews/rating/" + strconv.FormatUint(uint64(roomId), 10))
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -62,7 +62,7 @@ func CreateReview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8082/api/reviews", r.Body)
+	req, _ := http.NewRequest(http.MethodPost, utils.BaseReviewServicePath + "/api/reviews", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -84,7 +84,7 @@ func ReportReview(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	reviewId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodPatch, "http://localhost:8082/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10) + "/report", r.Body)
+	req, _ := http.NewRequest(http.MethodPatch, utils.BaseReviewServicePath + "/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10) + "/report", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -106,7 +106,7 @@ func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	reviewId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodPatch, "http://localhost:8082/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10) + "/dismiss", r.Body)
+	req, _ := http.NewRequest(http.MethodPatch, utils.BaseReviewServicePath + "/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10) + "/dismiss", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)
@@ -128,7 +128,7 @@ func DeleteReview(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	reviewId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	req, _ := http.NewRequest(http.MethodDelete, "http://localhost:8082/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10), r.Body)
+	req, _ := http.NewRequest(http.MethodDelete, utils.BaseReviewServicePath + "/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10), r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)

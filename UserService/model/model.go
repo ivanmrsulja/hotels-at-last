@@ -15,11 +15,11 @@ const (
 
 type User struct {
 	gorm.Model
-	Email string
-	Username string
-	Password string
-	Name string
-	Surname string
+	Email string `gorm:"not null;default:null;unique_index"`
+	Username string `gorm:"not null;default:null"`
+	Password string `gorm:"not null;default:null"`
+	Name string `gorm:"not null;default:null"`
+	Surname string `gorm:"not null;default:null"`
 	Role UserRole
 	BannedUntil time.Time
 }
