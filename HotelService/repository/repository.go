@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strconv"
+	"strings"
 
 	model "github.com/ivanmrsulja/hotels-at-last/model"
 	utils "github.com/ivanmrsulja/hotels-at-last/utils"
@@ -119,6 +120,9 @@ func UpdateHotel(hotel model.Hotel, id uint) error {
 		return errors.New("Hotel with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist.")
 	}
 
+	if strings.Trim(hotel.Name, " ") == "" || strings.Trim(hotel.Description, " ") == "" || strings.Trim(hotel.Address, " ") == "" {
+		return errors.New("There should be no empty fields, you know better :)")
+	}
 	hotelToUpdate.Name = hotel.Name
 	hotelToUpdate.Address = hotel.Address
 	hotelToUpdate.Description = hotel.Description
@@ -139,11 +143,11 @@ func UpdateRoom(room model.Room, id uint) error {
 		return errors.New("Room with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist.")
 	}
 
-	if roomToUpdate.Price <= 0 {
+	if room.Price <= 0 {
 		return errors.New("Price must be greater than 0.")
 	}
 
-	if roomToUpdate.NumberOfBeds <= 0 {
+	if room.NumberOfBeds <= 0 {
 		return errors.New("Number of beds in a room must be greater than 0.")
 	}
 

@@ -14,8 +14,13 @@ func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	size := r.URL.Query().Get("size")
 	
-	response, _ := http.Get("http://localhost:8082/api/reviews/rooms/" + strconv.FormatUint(uint64(roomId), 10) + "?page=" + page + "&size=" + size)
+	response, err := http.Get("http://localhost:8082/api/reviews/rooms/" + strconv.FormatUint(uint64(roomId), 10) + "?page=" + page + "&size=" + size)
 	
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+
 	utils.DelegateResponse(response, w)
 }
 
@@ -28,7 +33,12 @@ func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 	page := r.URL.Query().Get("page")
 	size := r.URL.Query().Get("size")
 	
-	response, _ := http.Get("http://localhost:8082/api/reviews/reported?page=" + page + "&size=" + size)
+	response, err := http.Get("http://localhost:8082/api/reviews/reported?page=" + page + "&size=" + size)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 	
 	utils.DelegateResponse(response, w)
 }
@@ -36,7 +46,12 @@ func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 func GetAverageRatingForRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
-	response, _ := http.Get("http://localhost:8082/api/reviews/rating/" + strconv.FormatUint(uint64(roomId), 10))
+	response, err := http.Get("http://localhost:8082/api/reviews/rating/" + strconv.FormatUint(uint64(roomId), 10))
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 	
 	utils.DelegateResponse(response, w)
 }
@@ -50,7 +65,12 @@ func CreateReview(w http.ResponseWriter, r *http.Request) {
 	req, _ := http.NewRequest(http.MethodPost, "http://localhost:8082/api/reviews", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
-	response, _ := client.Do(req)
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 
 	utils.DelegateResponse(response, w)
 }
@@ -67,7 +87,12 @@ func ReportReview(w http.ResponseWriter, r *http.Request) {
 	req, _ := http.NewRequest(http.MethodPatch, "http://localhost:8082/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10) + "/report", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
-	response, _ := client.Do(req)
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 
 	utils.DelegateResponse(response, w)
 }
@@ -84,7 +109,12 @@ func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
 	req, _ := http.NewRequest(http.MethodPatch, "http://localhost:8082/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10) + "/dismiss", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
-	response, _ := client.Do(req)
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 
 	utils.DelegateResponse(response, w)
 }
@@ -101,7 +131,12 @@ func DeleteReview(w http.ResponseWriter, r *http.Request) {
 	req, _ := http.NewRequest(http.MethodDelete, "http://localhost:8082/api/reviews/" + strconv.FormatUint(uint64(reviewId), 10), r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
-	response, _ := client.Do(req)
+	response, err := client.Do(req)
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
 
 	utils.DelegateResponse(response, w)
 }

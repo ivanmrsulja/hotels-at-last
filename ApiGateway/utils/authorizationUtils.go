@@ -18,7 +18,11 @@ func AuthorizeRole(r *http.Request, role string) error {
 
 	authRequest.Header.Set("Authorization", values[0])
 	authClient := &http.Client{}
-	authResponse, _ := authClient.Do(authRequest)
+	authResponse, err := authClient.Do(authRequest)
+
+	if err != nil {
+		return errors.New("User service is down.")
+	}
 
 	if authResponse.StatusCode != 200 {
 		return errors.New("Unauthorised")
