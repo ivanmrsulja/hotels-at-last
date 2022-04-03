@@ -42,18 +42,26 @@ func CreateReview(review model.Review) (model.Review, error) {
 		return review, errors.New("Rating must be a number between 1 and 5.")
 	}
 
-	response, _ := http.Get("http://localhost:8081/api/rooms/" + strconv.FormatUint(uint64(review.RoomId), 10))
+	response, errRoom := http.Get("http://localhost:8081/api/rooms/" + strconv.FormatUint(uint64(review.RoomId), 10))
 	if response.StatusCode != 200 {
 		var err model.ErrorResponse
 		json.NewDecoder(response.Body).Decode(&err)
 		return review, errors.New(err.Message)
 	}
 
-	responseUser, _ := http.Get("http://localhost:8083/api/users/" + strconv.FormatUint(uint64(review.UserId), 10))
+	if errRoom != nil {
+		return review, errors.New("Hotel service not avaliable.")
+	}
+
+	responseUser, errUser := http.Get("http://localhost:8083/api/users/" + strconv.FormatUint(uint64(review.UserId), 10))
 	if responseUser.StatusCode != 200 {
 		var err model.ErrorResponse
 		json.NewDecoder(responseUser.Body).Decode(&err)
 		return review, errors.New(err.Message)
+	}
+
+	if errUser != nil {
+		return review, errors.New("User service not avaliable.")
 	}
 
 	var user model.UserDTO

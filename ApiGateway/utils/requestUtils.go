@@ -24,6 +24,10 @@ var BaseUserServicePathRoundRobin, _ = roundrobin.New(
     &url.URL{Host: "http://localhost:8083"},
 )
 
+var BaseBookingServicePathRoundRobin, _ = roundrobin.New(
+    &url.URL{Host: "http://localhost:8000"},
+)
+
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
     w.Header().Set("Content-Length", response.Header.Get("Content-Length"))

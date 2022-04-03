@@ -37,5 +37,11 @@ func HandleRequests() {
 	router.HandleFunc("/api/hotels/{id}", handler.DeleteHotel).Methods("DELETE")
 	router.HandleFunc("/api/rooms/{id}", handler.DeleteRoom).Methods("DELETE")
 
+	// Booking Service
+	router.HandleFunc("/api/reservations", handler.CreateReservation).Methods("POST")
+	router.HandleFunc("/api/reservations/{id}/cancel", handler.CancelReservation).Methods("PUT")
+	router.HandleFunc("/api/reservations/{id}", handler.GetAllReservationsForRoom).Methods("GET")
+	router.HandleFunc("/api/reservations/user/{id}", handler.GetAllReservationsForUser).Methods("GET")
+
 	log.Fatal(http.ListenAndServe(":8085", router))
 }
