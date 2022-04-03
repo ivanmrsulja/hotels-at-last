@@ -3,11 +3,26 @@ package utils
 import (
 	"io"
 	"net/http"
+	"net/url"
+
+	roundrobin "github.com/hlts2/round-robin"
 )
 
-var BaseHotelServicePath string = "http://localhost:8081"
-var BaseReviewServicePath string = "http://localhost:8082"
-var BaseUserServicePath string = "http://localhost:8083"
+// var BaseHotelServicePath string = "http://localhost:8081"
+// var BaseReviewServicePath string = "http://localhost:8082"
+// var BaseUserServicePath string = "http://localhost:8083"
+
+var BaseHotelServicePathRoundRobin, _ = roundrobin.New(
+    &url.URL{Host: "http://localhost:8081"},
+)
+
+var BaseReviewServicePathRoundRobin, _ = roundrobin.New(
+    &url.URL{Host: "http://localhost:8082"},
+)
+
+var BaseUserServicePathRoundRobin, _ = roundrobin.New(
+    &url.URL{Host: "http://localhost:8083"},
+)
 
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))

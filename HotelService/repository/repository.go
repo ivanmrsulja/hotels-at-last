@@ -143,6 +143,10 @@ func UpdateRoom(room model.Room, id uint) error {
 		return errors.New("Room with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist.")
 	}
 
+	if strings.Trim(room.RoomNumber, " ") == "" {
+		return errors.New("Room number must not be empty.")
+	}
+
 	if room.Price <= 0 {
 		return errors.New("Price must be greater than 0.")
 	}
@@ -151,6 +155,7 @@ func UpdateRoom(room model.Room, id uint) error {
 		return errors.New("Number of beds in a room must be greater than 0.")
 	}
 
+	roomToUpdate.RoomNumber = room.RoomNumber
 	roomToUpdate.Price = room.Price
 	roomToUpdate.AirConditioned = room.AirConditioned
 	roomToUpdate.HasParkingSpace = room.HasParkingSpace

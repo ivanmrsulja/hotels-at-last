@@ -8,7 +8,7 @@ import (
 
 // roles: user, admin (all lowercase letters)
 func AuthorizeRole(r *http.Request, role string) error {
-	authRequest, _ := http.NewRequest(http.MethodGet, "http://localhost:8083/api/users/authorize/" + role, bytes.NewBufferString(""))
+	authRequest, _ := http.NewRequest(http.MethodGet, BaseUserServicePathRoundRobin.Next().Host + "/api/users/authorize/" + role, bytes.NewBufferString(""))
 	authRequest.Header.Set("Accept", "application/json")
 	values := r.Header.Values("Authorization")
 

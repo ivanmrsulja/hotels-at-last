@@ -16,13 +16,13 @@ var (
 		{Name: "Splendid", Address: "Address3", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet 3"},
 	}
 	rooms = []model.Room{
-		{NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},
-		{NumberOfBeds: 4, Price: 200, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},
-		{NumberOfBeds: 4, Price: 130, AirConditioned: false, HasParkingSpace: false, HotelID: 1, HasTV: true},
-		{NumberOfBeds: 3, Price: 90, AirConditioned: true, HasParkingSpace: false, HotelID: 2, HasTV: true},
-		{NumberOfBeds: 3, Price: 80, AirConditioned: false, HasParkingSpace: false, HotelID: 2, HasTV: true},
-		{NumberOfBeds: 5, Price: 420, AirConditioned: true, HasParkingSpace: false, HotelID: 3, HasTV: true},
-		{NumberOfBeds: 5, Price: 530, AirConditioned: true, HasParkingSpace: true, HotelID: 3, HasTV: true},
+		{RoomNumber: "1", NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},
+		{RoomNumber: "2", NumberOfBeds: 4, Price: 200, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},
+		{RoomNumber: "3", NumberOfBeds: 4, Price: 130, AirConditioned: false, HasParkingSpace: false, HotelID: 1, HasTV: true},
+		{RoomNumber: "100", NumberOfBeds: 3, Price: 90, AirConditioned: true, HasParkingSpace: false, HotelID: 2, HasTV: true},
+		{RoomNumber: "101", NumberOfBeds: 3, Price: 80, AirConditioned: false, HasParkingSpace: false, HotelID: 2, HasTV: true},
+		{RoomNumber: "10", NumberOfBeds: 5, Price: 420, AirConditioned: true, HasParkingSpace: false, HotelID: 3, HasTV: true},
+		{RoomNumber: "11", NumberOfBeds: 5, Price: 530, AirConditioned: true, HasParkingSpace: true, HotelID: 3, HasTV: true},
 	}
 )
 

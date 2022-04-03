@@ -14,6 +14,7 @@ func (h *HotelDTO) ToHotel() Hotel {
 
 type RoomDTO struct {
 	Id              uint    `json:"Id"`
+	RoomNumber      string  `json:"RoomNumber"`
 	NumberOfBeds    int     `json:"NumberOfBeds"`
 	Price           float64 `json:"Price"`
 	AirConditioned  bool    `json:"AirConditioned"`
@@ -22,7 +23,7 @@ type RoomDTO struct {
 }
 
 func (r *RoomDTO) ToRoom() Room {
-	return Room{NumberOfBeds: r.NumberOfBeds, Price: r.Price, AirConditioned: r.AirConditioned, HasParkingSpace: r.HasParkingSpace, HasTV: r.HasTV}
+	return Room{RoomNumber: r.RoomNumber, NumberOfBeds: r.NumberOfBeds, Price: r.Price, AirConditioned: r.AirConditioned, HasParkingSpace: r.HasParkingSpace, HasTV: r.HasTV}
 }
 
 type ErrorResponse struct {
