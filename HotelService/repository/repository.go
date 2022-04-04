@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"math"
 	"net/http"
 	"strconv"
 	"strings"
@@ -31,7 +32,7 @@ func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
   }
 }
 
-func GetAllHotels(r *http.Request) []model.Hotel {
+func GetAllHotels(r *http.Request) ([]model.Hotel, int32) {
 	var hotels []model.Hotel
 
 	name := "%" + r.URL.Query().Get("name") + "%"
@@ -44,23 +45,48 @@ func GetAllHotels(r *http.Request) []model.Hotel {
 	parking, err6 := strconv.ParseBool(r.URL.Query().Get("parking"))
 	tv, err7 := strconv.ParseBool(r.URL.Query().Get("tv"))
 
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
+	switch {
+    case pageSize > 100:
+      pageSize = 100
+    case pageSize <= 0:
+      pageSize = 10
+    }
+	var totalResults float64
+
 	if err1 != nil || err2 != nil || err3 != nil || err4 != nil || err5 != nil || err6 != nil || err7 != nil {
 		utils.Db.Scopes(Paginate(r)).Find(&hotels)
+		utils.Db.Table("hotels").Select("COUNT(*)").Row().Scan(&totalResults)
 	} else {
 		utils.Db.Scopes(Paginate(r)).Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Find(&hotels)
+		utils.Db.Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Select("COUNT(*)").Row().Scan(&totalResults)
 	}
 
-	return hotels
+	totalPages := int32(math.Ceil(totalResults/float64(pageSize)))
+
+	return hotels, totalPages
 }
 
-func FindRoomsForHotel(r *http.Request, id uint) []model.Room {
+func FindRoomsForHotel(r *http.Request, id uint) ([]model.Room, int32) {
 	var hotel model.Hotel
 	var rooms []model.Room
 
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
+	switch {
+    case pageSize > 100:
+      pageSize = 100
+    case pageSize <= 0:
+      pageSize = 10
+    }
+	var totalResults float64
+
 	utils.Db.First(&hotel, id)
 	utils.Db.Model(&hotel).Scopes(Paginate(r)).Related(&rooms)
+	utils.Db.Table("rooms").Where("hotel_id = ?", id).Select("COUNT(*)").Row().Scan(&totalResults)
 
-	return rooms
+	totalPages := int32(math.Ceil(totalResults/float64(pageSize)))
+
+	return rooms, totalPages
 }
 
 func FindRoom(id uint) (model.Room, error) {

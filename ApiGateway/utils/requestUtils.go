@@ -31,6 +31,7 @@ var BaseBookingServicePathRoundRobin, _ = roundrobin.New(
 func DelegateResponse(response *http.Response, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", response.Header.Get("Content-Type"))
     w.Header().Set("Content-Length", response.Header.Get("Content-Length"))
+    w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(response.StatusCode)
     io.Copy(w, response.Body)
     response.Body.Close()

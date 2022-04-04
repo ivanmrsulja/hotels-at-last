@@ -32,3 +32,8 @@ type UserDTO struct {
 	Name     string `json:"Name"`
 	Surname  string `json:"Surname"`
 }
+
+type ReviewsPageable struct {
+	Results    []ReviewDTO `json:"Results"`
+	TotalPages int32       `json:"TotalPages"`
+}

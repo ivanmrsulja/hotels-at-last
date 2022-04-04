@@ -30,3 +30,13 @@ type ErrorResponse struct {
 	Message    string `json:"Message"`
 	StatusCode int    `json:"StatusCode"`
 }
+
+type HotelsPageable struct {
+	Results    []HotelDTO `json:"Results"`
+	TotalPages int32      `json:"TotalPages"`
+}
+
+type RoomsPageable struct {
+	Results    []RoomDTO `json:"Results"`
+	TotalPages int32     `json:"TotalPages"`
+}

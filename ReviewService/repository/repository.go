@@ -3,13 +3,24 @@ package repository
 import (
 	"encoding/json"
 	"errors"
+	"math"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
+	roundrobin "github.com/hlts2/round-robin"
 	model "github.com/ivanmrsulja/hotels-at-last/review-service/model"
 	utils "github.com/ivanmrsulja/hotels-at-last/review-service/utils"
 	"github.com/jinzhu/gorm"
+)
+
+var baseHotelServicePathRoundRobin, _ = roundrobin.New(
+    &url.URL{Host: "http://localhost:8081"},
+)
+
+var baseUserServicePathRoundRobin, _ = roundrobin.New(
+    &url.URL{Host: "http://localhost:8083"},
 )
 
 func Paginate(r *http.Request) func(db *gorm.DB) *gorm.DB {
@@ -42,7 +53,7 @@ func CreateReview(review model.Review) (model.Review, error) {
 		return review, errors.New("Rating must be a number between 1 and 5.")
 	}
 
-	response, errRoom := http.Get("http://localhost:8081/api/rooms/" + strconv.FormatUint(uint64(review.RoomId), 10))
+	response, errRoom := http.Get(baseHotelServicePathRoundRobin.Next().Host + "/api/rooms/" + strconv.FormatUint(uint64(review.RoomId), 10))
 	if response.StatusCode != 200 {
 		var err model.ErrorResponse
 		json.NewDecoder(response.Body).Decode(&err)
@@ -53,7 +64,7 @@ func CreateReview(review model.Review) (model.Review, error) {
 		return review, errors.New("Hotel service not avaliable.")
 	}
 
-	responseUser, errUser := http.Get("http://localhost:8083/api/users/" + strconv.FormatUint(uint64(review.UserId), 10))
+	responseUser, errUser := http.Get(baseUserServicePathRoundRobin.Next().Host + "/api/users/" + strconv.FormatUint(uint64(review.UserId), 10))
 	if responseUser.StatusCode != 200 {
 		var err model.ErrorResponse
 		json.NewDecoder(responseUser.Body).Decode(&err)
@@ -106,20 +117,44 @@ func DismissReviewReports(id uint) error {
 	return result.Error
 }
 
-func GetAllReportedReviews(r *http.Request) []model.Review {
+func GetAllReportedReviews(r *http.Request) ([]model.Review, int32) {
 	var reviews []model.Review
+
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
+	switch {
+    case pageSize > 100:
+      pageSize = 100
+    case pageSize <= 0:
+      pageSize = 10
+    }
+	var totalResults float64
 
 	utils.Db.Scopes(Paginate(r)).Where("times_reported > 0").Find(&reviews)
+	utils.Db.Table("reviews").Where("times_reported > 0").Select("COUNT(*)").Row().Scan(&totalResults)
 
-	return reviews
+	totalPages := int32(math.Ceil(totalResults/float64(pageSize)))
+
+	return reviews, totalPages
 }
 
-func GetAllReviewsForRoom(r *http.Request, id uint) []model.Review {
+func GetAllReviewsForRoom(r *http.Request, id uint) ([]model.Review, int32) {
 	var reviews []model.Review
 
-	utils.Db.Scopes(Paginate(r)).Where("room_id = ?", id).Find(&reviews)
+	pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
+	switch {
+    case pageSize > 100:
+      pageSize = 100
+    case pageSize <= 0:
+      pageSize = 10
+    }
+	var totalResults float64
 
-	return reviews
+	utils.Db.Scopes(Paginate(r)).Where("room_id = ?", id).Find(&reviews)
+	utils.Db.Table("reviews").Where("room_id = ?", id).Select("COUNT(*)").Row().Scan(&totalResults)
+
+	totalPages := int32(math.Ceil(totalResults/float64(pageSize)))
+
+	return reviews, totalPages
 }
 
 func DeleteReview(id uint) error {

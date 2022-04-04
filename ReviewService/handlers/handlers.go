@@ -59,28 +59,28 @@ func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
-	reviews := repository.GetAllReportedReviews(r)
+	reviews, totalPages := repository.GetAllReportedReviews(r)
 	reviewList := []model.ReviewDTO{}
 	for _, review := range reviews {
 		reviewList = append(reviewList, review.ToDTO())
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(reviewList)
+	json.NewEncoder(w).Encode(model.ReviewsPageable{Results: reviewList, TotalPages: totalPages})
 }
 
 func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 
-	reviews := repository.GetAllReviewsForRoom(r, uint(roomId))
+	reviews, totalPages := repository.GetAllReviewsForRoom(r, uint(roomId))
 	reviewList := []model.ReviewDTO{}
 	for _, review := range reviews {
 		reviewList = append(reviewList, review.ToDTO())
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(reviewList)
+	json.NewEncoder(w).Encode(model.ReviewsPageable{Results: reviewList, TotalPages: totalPages})
 }
 
 func DeleteReview(w http.ResponseWriter, r *http.Request) {
