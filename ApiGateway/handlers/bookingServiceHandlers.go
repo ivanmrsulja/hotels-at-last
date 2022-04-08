@@ -13,6 +13,11 @@ import (
 )
 
 func GetAllReservationsForRoom(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 	response, err := http.Get(utils.BaseBookingServicePathRoundRobin.Next().Host + "/api/reservations/" + strconv.FormatUint(uint64(roomId), 10))
@@ -26,6 +31,11 @@ func GetAllReservationsForRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllReservationsForUser(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	params := mux.Vars(r)
 	userId, _ := strconv.ParseUint(params["id"], 10, 32)
 	response, err := http.Get(utils.BaseBookingServicePathRoundRobin.Next().Host + "/api/reservations/user/" + strconv.FormatUint(uint64(userId), 10))
@@ -39,6 +49,11 @@ func GetAllReservationsForUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func CancelReservation(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	params := mux.Vars(r)
 	reservationId, _ := strconv.ParseUint(params["id"], 10, 32)
 
@@ -56,6 +71,11 @@ func CancelReservation(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateReservation(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	var request model.CreateReservationRequest
 	data, _ := ioutil.ReadAll(r.Body)
 	json.NewDecoder(bytes.NewReader(data)).Decode(&request)

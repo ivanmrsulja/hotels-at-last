@@ -21,27 +21,27 @@ func Test(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllHotels(w http.ResponseWriter, r *http.Request) {
-	hotels, totalPages := repository.GetAllHotels(r)
+	hotels, totalResults := repository.GetAllHotels(r)
 	hotelList := []model.HotelDTO{}
 	for _, hotel := range hotels {
 		hotelList = append(hotelList, hotel.ToDTO())
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(model.HotelsPageable{Results: hotelList, TotalPages: totalPages})
+	json.NewEncoder(w).Encode(model.HotelsPageable{Results: hotelList, TotalResults: totalResults})
 }
 
 func GetAllRoomsForHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	id, _ := strconv.ParseUint(params["id"], 10, 32)
-	rooms, totalPages := repository.FindRoomsForHotel(r, uint(id))
+	rooms, totalResults := repository.FindRoomsForHotel(r, uint(id))
 	roomList := []model.RoomDTO{}
 	for _, room := range rooms {
 		roomList = append(roomList, room.ToDTO())
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(model.RoomsPageable{Results: roomList, TotalPages: totalPages})
+	json.NewEncoder(w).Encode(model.RoomsPageable{Results: roomList, TotalResults: totalResults})
 }
 
 func GetRoom(w http.ResponseWriter, r *http.Request) {

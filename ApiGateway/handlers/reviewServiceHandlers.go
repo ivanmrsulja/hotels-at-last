@@ -9,6 +9,11 @@ import (
 )
 
 func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 	page := r.URL.Query().Get("page")
@@ -25,6 +30,11 @@ func GetAllReviewsForRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if utils.AuthorizeRole(r, "admin") != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -44,6 +54,11 @@ func GetAllReportedReviews(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAverageRatingForRoom(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	params := mux.Vars(r)
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 	response, err := http.Get(utils.BaseReviewServicePathRoundRobin.Next().Host + "/api/reviews/rating/" + strconv.FormatUint(uint64(roomId), 10))
@@ -57,6 +72,11 @@ func GetAverageRatingForRoom(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateReview(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if utils.AuthorizeRole(r, "user") != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -76,6 +96,11 @@ func CreateReview(w http.ResponseWriter, r *http.Request) {
 }
 
 func ReportReview(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if utils.AuthorizeRole(r, "user") != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -98,6 +123,11 @@ func ReportReview(w http.ResponseWriter, r *http.Request) {
 }
 
 func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if utils.AuthorizeRole(r, "admin") != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -120,6 +150,11 @@ func DismissReviewReports(w http.ResponseWriter, r *http.Request) {
 }
 
 func DeleteReview(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
 	if utils.AuthorizeRole(r, "admin") != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return

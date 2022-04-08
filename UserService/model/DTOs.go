@@ -25,6 +25,7 @@ type Claims struct {
 	Email string `json:"email"`
 	Role UserRole `json:"role"`
 	Username string `json:"username"`
+	Id uint `json:"Id"`
 	jwt.StandardClaims
 }
 

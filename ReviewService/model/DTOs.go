@@ -34,6 +34,6 @@ type UserDTO struct {
 }
 
 type ReviewsPageable struct {
-	Results    []ReviewDTO `json:"Results"`
-	TotalPages int32       `json:"TotalPages"`
+	Results      []ReviewDTO `json:"Results"`
+	TotalResults int32       `json:"TotalResults"`
 }

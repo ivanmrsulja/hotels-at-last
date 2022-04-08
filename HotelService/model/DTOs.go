@@ -32,11 +32,11 @@ type ErrorResponse struct {
 }
 
 type HotelsPageable struct {
-	Results    []HotelDTO `json:"Results"`
-	TotalPages int32      `json:"TotalPages"`
+	Results      []HotelDTO `json:"Results"`
+	TotalResults int32      `json:"TotalResults"`
 }
 
 type RoomsPageable struct {
-	Results    []RoomDTO `json:"Results"`
-	TotalPages int32     `json:"TotalPages"`
+	Results      []RoomDTO `json:"Results"`
+	TotalResults int32     `json:"TotalResults"`
 }

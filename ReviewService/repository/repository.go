@@ -3,7 +3,6 @@ package repository
 import (
 	"encoding/json"
 	"errors"
-	"math"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -119,42 +118,22 @@ func DismissReviewReports(id uint) error {
 
 func GetAllReportedReviews(r *http.Request) ([]model.Review, int32) {
 	var reviews []model.Review
-
-	pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
-	switch {
-    case pageSize > 100:
-      pageSize = 100
-    case pageSize <= 0:
-      pageSize = 10
-    }
-	var totalResults float64
+	var totalResults int32
 
 	utils.Db.Scopes(Paginate(r)).Where("times_reported > 0").Find(&reviews)
-	utils.Db.Table("reviews").Where("times_reported > 0").Select("COUNT(*)").Row().Scan(&totalResults)
+	utils.Db.Table("reviews").Where("times_reported > 0 AND deleted_at IS null").Select("COUNT(*)").Row().Scan(&totalResults)
 
-	totalPages := int32(math.Ceil(totalResults/float64(pageSize)))
-
-	return reviews, totalPages
+	return reviews, totalResults
 }
 
 func GetAllReviewsForRoom(r *http.Request, id uint) ([]model.Review, int32) {
 	var reviews []model.Review
-
-	pageSize, _ := strconv.Atoi(r.URL.Query().Get("size"))
-	switch {
-    case pageSize > 100:
-      pageSize = 100
-    case pageSize <= 0:
-      pageSize = 10
-    }
-	var totalResults float64
+	var totalResults int32
 
 	utils.Db.Scopes(Paginate(r)).Where("room_id = ?", id).Find(&reviews)
-	utils.Db.Table("reviews").Where("room_id = ?", id).Select("COUNT(*)").Row().Scan(&totalResults)
+	utils.Db.Table("reviews").Where("room_id = ? AND deleted_at IS null", id).Select("COUNT(*)").Row().Scan(&totalResults)
 
-	totalPages := int32(math.Ceil(totalResults/float64(pageSize)))
-
-	return reviews, totalPages
+	return reviews, totalResults
 }
 
 func DeleteReview(id uint) error {
