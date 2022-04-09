@@ -147,7 +147,7 @@ pub fn get_count_for_user_and_room(id_user: i32, id_room: i32) -> Result<(String
 
     let mut count: i32 = 0;
     let today = (Utc::now()).naive_local().date();
-    for row in client.query("SELECT reservation_start FROM reservations WHERE userId = $1 AND roomId = $2", &[&id_user, &id_room])? {
+    for row in client.query("SELECT reservation_start FROM reservations WHERE userId = $1 AND roomId = $2 AND cancelled = false", &[&id_user, &id_room])? {
         let start: &str = row.get(0);
         let start_date = NaiveDate::parse_from_str(start, "%Y-%m-%d").unwrap();
         if start_date <= today {
