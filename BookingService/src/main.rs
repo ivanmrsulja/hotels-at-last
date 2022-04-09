@@ -22,6 +22,13 @@ fn get_all_for_user(id: i32) -> content::Json<String> {
     }).join().unwrap()
 }
 
+#[get("/user/<id_user>/room/<id_room>")]
+fn get_count_for_user_and_room(id_user: i32, id_room: i32) -> content::Json<String> {
+    thread::spawn(move || {
+        content::Json(utils::get_count_for_user_and_room(id_user, id_room).unwrap())
+    }).join().unwrap()
+}
+
 #[put("/<id>/cancel")]
 fn cancel_reservation(id: i32) -> content::Json<String> {
     thread::spawn(move || {
@@ -42,5 +49,5 @@ fn rocket() -> Rocket<Build> {
         utils::seed_db();
     }).join().expect("Thread panicked");
 
-    rocket::build().mount("/api/reservations", routes![get_all_for_room, get_all_for_user, cancel_reservation, create_reservation])
+    rocket::build().mount("/api/reservations", routes![get_all_for_room, get_all_for_user, cancel_reservation, create_reservation, get_count_for_user_and_room])
 }

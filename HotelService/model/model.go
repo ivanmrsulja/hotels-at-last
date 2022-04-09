@@ -33,5 +33,5 @@ type Hotel struct {
 }
 
 func (hotel *Hotel) ToDTO() HotelDTO{
-	return HotelDTO{hotel.ID, hotel.Name, hotel.Address, hotel.Base64Image, hotel.Description}
+	return HotelDTO{hotel.ID, hotel.Name, hotel.Address, hotel.Description, hotel.Base64Image}
 }

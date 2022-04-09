@@ -30,6 +30,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/hotels", handler.GetAllHotels).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/hotels/{id}/rooms", handler.GetAllRoomsForHotel).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/rooms/{id}", handler.GetRoom).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/hotels/{id}", handler.GetHotel).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/hotels", handler.CreateHotel).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotels/{id}/rooms", handler.CreateRoomForHotel).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/hotels/{id}", handler.UpdateHotel).Methods("PUT", "OPTIONS")
@@ -42,6 +43,7 @@ func HandleRequests() {
 	router.HandleFunc("/api/reservations/{id}/cancel", handler.CancelReservation).Methods("PUT", "OPTIONS")
 	router.HandleFunc("/api/reservations/{id}", handler.GetAllReservationsForRoom).Methods("GET", "OPTIONS")
 	router.HandleFunc("/api/reservations/user/{id}", handler.GetAllReservationsForUser).Methods("GET", "OPTIONS")
+	router.HandleFunc("/api/reservations/user/{userId}/room/{roomId}",handler.GetCountForUserAndRoom).Methods("GET", "OPTIONS")
 
 	log.Fatal(http.ListenAndServe(":8085", router))
 }

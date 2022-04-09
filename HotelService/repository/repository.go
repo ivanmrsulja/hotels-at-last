@@ -83,6 +83,18 @@ func FindRoom(id uint) (model.Room, error) {
 	return room, nil
 }
 
+func FindHotel(id uint) (model.Hotel, error) {
+	var hotel model.Hotel
+
+	utils.Db.First(&hotel, id)
+
+	if hotel.ID == 0 {
+		return hotel, errors.New("Hotel with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist")
+	}
+
+	return hotel, nil
+}
+
 func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
 	createdHotel := utils.Db.Create(&newHotel)
 

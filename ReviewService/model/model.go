@@ -16,5 +16,5 @@ type Review struct {
 }
 
 func (review *Review) ToDTO() ReviewDTO {
-	return ReviewDTO{Id: review.ID, Comment: review.Comment, Rating: review.Rating, TimesReported: review.TimesReported, UserId: review.UserId, UserUsername: review.UserUsername}
+	return ReviewDTO{Id: review.ID, Comment: review.Comment, Rating: review.Rating, TimesReported: review.TimesReported, UserId: review.UserId, UserUsername: review.UserUsername, CreatedAt: review.CreatedAt}
 }

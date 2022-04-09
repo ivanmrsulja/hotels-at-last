@@ -76,6 +76,25 @@ func GetRoom(w http.ResponseWriter, r *http.Request) {
 	utils.DelegateResponse(response, w)
 }
 
+func GetHotel(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	params := mux.Vars(r)
+	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
+
+	response, err := http.Get(utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/hotels/" + strconv.FormatUint(uint64(hotelId), 10))
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+	
+	utils.DelegateResponse(response, w)
+}
+
 func CreateHotel(w http.ResponseWriter, r *http.Request) {
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {

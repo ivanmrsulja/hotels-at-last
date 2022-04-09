@@ -1,10 +1,14 @@
 package handlers
 
 import (
+	"bytes"
+	"encoding/json"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
+	"github.com/ivanmrsulja/hotels-at-last/api-gateway/model"
 	"github.com/ivanmrsulja/hotels-at-last/api-gateway/utils"
 )
 
@@ -82,7 +86,23 @@ func CreateReview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req, _ := http.NewRequest(http.MethodPost, utils.BaseReviewServicePathRoundRobin.Next().Host + "/api/reviews", r.Body)
+	data, _ := ioutil.ReadAll(r.Body)
+	var reviewRequest model.ReviewCreateRequestDTO
+	json.NewDecoder(bytes.NewReader(data)).Decode(&reviewRequest)
+
+	res, err1 := http.Get(utils.BaseBookingServicePathRoundRobin.Next().Host + "/api/reservations/user/" + strconv.FormatUint(uint64(reviewRequest.UserId), 10) + "/room/" + strconv.FormatUint(uint64(reviewRequest.RoomId), 10))
+	if err1 != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+	var num int32
+	json.NewDecoder(res.Body).Decode(&num)
+	if num == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	req, _ := http.NewRequest(http.MethodPost, utils.BaseReviewServicePathRoundRobin.Next().Host + "/api/reviews", bytes.NewReader(data))
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
 	response, err := client.Do(req)

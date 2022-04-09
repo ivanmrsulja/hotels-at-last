@@ -58,6 +58,20 @@ func GetRoom(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetHotel(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	id, _ := strconv.ParseUint(params["id"], 10, 32)
+	hotel, err := repository.FindHotel(uint(id))
+	
+	w.Header().Set("Content-Type", "application/json")
+	if err != nil {
+		w.WriteHeader(http.StatusNotFound)
+		json.NewEncoder(w).Encode(model.ErrorResponse{Message: err.Error(), StatusCode: http.StatusNotFound})
+	} else {
+		json.NewEncoder(w).Encode(hotel.ToDTO())
+	}
+}
+
 func CreateRoomForHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)

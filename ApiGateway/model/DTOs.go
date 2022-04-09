@@ -7,3 +7,10 @@ type CreateReservationRequest struct {
 	End      string `json:"end"`
 	Username string `json:"username"`
 }
+
+type ReviewCreateRequestDTO struct {
+	Comment string `json:"Comment"`
+	Rating  int    `json:"Rating"`
+	UserId  uint   `json:"UserId"`
+	RoomId  uint   `json:"RoomId"`
+}

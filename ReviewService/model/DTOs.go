@@ -1,5 +1,9 @@
 package model
 
+import (
+	"time"
+)
+
 type ReviewDTO struct {
 	Id            uint   `json:"Id"`
 	Comment       string `json:"Comment"`
@@ -7,6 +11,7 @@ type ReviewDTO struct {
 	TimesReported int    `json:"TimesReported"`
 	UserId        uint   `json:"UserId"`
 	UserUsername  string `json:"UserName"`
+	CreatedAt     time.Time `json:"CreatedAt"`
 }
 
 type ReviewCreateRequestDTO struct {

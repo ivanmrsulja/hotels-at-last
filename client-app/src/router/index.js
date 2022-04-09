@@ -16,6 +16,15 @@ const routes = [
     },
   },
   {
+    path: "/hotels/:id",
+    name: "DetailedHotel",
+    component: () => import("../views/DetailedHotelView.vue"),
+    meta: {
+      authenticated: false,
+      authorities: [],
+    },
+  },
+  {
     path: "/login",
     name: "Login",
     component: () => import("../views/Login.vue"),

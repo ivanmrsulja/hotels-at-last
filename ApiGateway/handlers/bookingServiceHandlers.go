@@ -48,6 +48,25 @@ func GetAllReservationsForUser(w http.ResponseWriter, r *http.Request) {
 	utils.DelegateResponse(response, w)
 }
 
+func GetCountForUserAndRoom(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	params := mux.Vars(r)
+	userId, _ := strconv.ParseUint(params["userId"], 10, 32)
+	roomId, _ := strconv.ParseUint(params["roomId"], 10, 32)
+	response, err := http.Get(utils.BaseBookingServicePathRoundRobin.Next().Host + "/api/reservations/user/" + strconv.FormatUint(uint64(userId), 10) + "/room/" + strconv.FormatUint(uint64(roomId), 10))
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+	
+	utils.DelegateResponse(response, w)
+}
+
 func CancelReservation(w http.ResponseWriter, r *http.Request) {
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
