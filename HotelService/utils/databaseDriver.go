@@ -11,9 +11,9 @@ import (
 
 var (
 	hotels = []model.Hotel{
-		{Name: "Hotel Lux", Address: "Address1", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet 1"},
-		{Name: "Hotel Vardar", Address: "Address2", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet 2"},
-		{Name: "Splendid", Address: "Address3", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet 3"},
+		{Name: "Hotel Lux", Address: "Mihajla Pupina 132", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
+		{Name: "Hotel Vardar", Address: "Njegoseva 32", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
+		{Name: "Splendid", Address: "Topliski Put BB", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
 	}
 	rooms = []model.Room{
 		{RoomNumber: "1", NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},

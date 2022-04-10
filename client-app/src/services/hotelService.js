@@ -6,6 +6,18 @@ class HotelService extends BaseService {
     return axios.get(this.basePath + "/hotels?page=" + page + "&size=" + size);
   }
 
+  async getAllRoomsForHotel(page, size, hotelId) {
+    return axios.get(
+      this.basePath +
+        "/hotels/" +
+        hotelId +
+        "/rooms?page=" +
+        page +
+        "&size=" +
+        size
+    );
+  }
+
   async getHotel(id) {
     return axios.get(this.basePath + "/hotels/" + id);
   }

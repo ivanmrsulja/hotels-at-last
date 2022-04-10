@@ -6,8 +6,16 @@ class ReservationService extends BaseService {
     return axios.get(this.basePath + "/reservations/user/" + id);
   }
 
+  async getAllForRoom(id) {
+    return axios.get(this.basePath + "/reservations/" + id);
+  }
+
   async cancelReservation(id) {
     return axios.put(this.basePath + "/reservations/" + id + "/cancel");
+  }
+
+  async createReservation(requestBody) {
+    return axios.post(this.basePath + "/reservations", requestBody);
   }
 }
 
