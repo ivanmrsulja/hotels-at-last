@@ -94,7 +94,7 @@ export default {
         start: this.dateStart,
         end: this.dateEnd,
       };
-      this.$root.$emit("reservation", timeframe);
+      this.$root.$emit("reservationCreateRequest", timeframe);
     },
   },
 };

@@ -202,10 +202,11 @@ pub fn create_reservation(reservation: rocket::serde::json::Json<ReservationCrea
             client.close()?;
             return Ok(serde_json::to_string(&Response{message: "Reservation overlaps with another reservation.".to_string()}).unwrap());
         }
-        if end_date_new <= start_date_new {
-            client.close()?;
-            return Ok(serde_json::to_string(&Response{message: "Invalid reservation period.".to_string()}).unwrap());
-        }
+    }
+
+    if end_date_new <= start_date_new {
+        client.close()?;
+        return Ok(serde_json::to_string(&Response{message: "Invalid reservation period.".to_string()}).unwrap());
     }
     
     client.execute(
@@ -215,5 +216,5 @@ pub fn create_reservation(reservation: rocket::serde::json::Json<ReservationCrea
 
     client.close()?;
 
-    Ok(serde_json::to_string(&Response{message: "OK".to_string()}).unwrap())
+    Ok(serde_json::to_string(&Response{message: "Reservation successfull.".to_string()}).unwrap())
 }

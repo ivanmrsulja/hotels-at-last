@@ -17,6 +17,12 @@ class ReservationService extends BaseService {
   async createReservation(requestBody) {
     return axios.post(this.basePath + "/reservations", requestBody);
   }
+
+  async getCountForUserAndRoom(userId, roomId) {
+    return axios.get(
+      this.basePath + "/reservations/user/" + userId + "/room/" + roomId
+    );
+  }
 }
 
 export default new ReservationService();

@@ -14,21 +14,32 @@
             <th>Air Conditioning</th>
             <th>Parking</th>
             <th>TV</th>
+            <th>Rating</th>
           </tr>
           <tr>
-            <td>{{ room.NumberOfBeds }}</td>
-            <td>{{ room.Price }}</td>
-            <td>
+            <td align="center">{{ room.NumberOfBeds }}</td>
+            <td align="center">{{ room.Price }}</td>
+            <td align="center">
               <v-icon v-if="room.AirConditioned">mdi-check-circle</v-icon>
               <v-icon v-if="!room.AirConditioned">mdi-close-thick</v-icon>
             </td>
-            <td>
+            <td align="center">
               <v-icon v-if="room.HasParkingSpace">mdi-check-circle</v-icon>
               <v-icon v-if="!room.HasParkingSpace">mdi-close-thick</v-icon>
             </td>
-            <td>
+            <td align="center">
               <v-icon v-if="room.HasTV">mdi-check-circle</v-icon>
               <v-icon v-if="!room.HasTV">mdi-close-thick</v-icon>
+            </td>
+            <td align="center">
+              <v-rating
+                v-if="averageRating > 0"
+                length="5"
+                size="20"
+                :value="averageRating"
+                readonly
+              ></v-rating>
+              <h5 v-if="averageRating === 0">NO RATINGS</h5>
             </td>
           </tr>
         </table>
@@ -44,9 +55,10 @@
         ></v-data-table>
         <br />
         <br />
-        <reservation-form></reservation-form>
+        <reservation-form v-if="userLoggedIn"></reservation-form>
         <br />
-        <h2>Reviews:</h2>
+        <br />
+        <h2 v-if="reviewTotalPages > 0">Reviews:</h2>
         <br />
         <div class="comment" v-for="review in reviews" v-bind:key="review.Id">
           <div class="comment-heading">
@@ -74,12 +86,16 @@
               ></v-rating>
             </p>
 
-            <button type="button" @click="reportReview(review.Id)">
+            <button
+              v-if="userLoggedIn && review.UserId !== userId"
+              type="button"
+              @click="reportReview(review.Id)"
+            >
               Report
             </button>
           </div>
         </div>
-        <div class="pagination">
+        <div v-if="reviewTotalPages > 0" class="pagination">
           <a href="#" @click.stop.prevent="newPage(reviewPageIndex - 1)"
             >&laquo;</a
           >
@@ -97,7 +113,7 @@
         </div>
         <br />
         <br />
-        <div>
+        <div v-if="reservationCount > 0">
           <textarea
             cols="53"
             rows="3"
@@ -137,6 +153,7 @@ import ReservationForm from "../components/detailedHotel/reservationForm.vue";
 import HotelService from "../services/hotelService.js";
 import ReservationService from "../services/reservationService.js";
 import ReviewService from "../services/reviewService.js";
+import AuthenticationService from "../services/authenticationService.js";
 import jwtDecode from "jwt-decode";
 
 export default {
@@ -165,16 +182,33 @@ export default {
       snackbar: false,
       text: "",
       timeout: 2000,
+      userLoggedIn: false,
+      userId: 0,
+      reservationCount: 0,
+      averageRating: 0,
     };
   },
   mounted() {
     HotelService.getRoom(this.$route.params.roomId).then((response) => {
       this.room = response.data;
+
+      this.fetchAverageRating();
+
+      this.userLoggedIn = AuthenticationService.userLoggedIn();
+      if (this.userLoggedIn) {
+        this.userId = jwtDecode(localStorage.getItem("jwt")).Id;
+        ReservationService.getCountForUserAndRoom(
+          this.userId,
+          this.room.Id
+        ).then((response) => {
+          this.reservationCount = response.data;
+        });
+      }
     });
     this.fetchReservations();
     this.fetchReviews();
 
-    this.$root.$on("reservation", (timeframe) => {
+    this.$root.$on("reservationCreateRequest", (timeframe) => {
       HotelService.getHotel(this.$route.params.id).then((response) => {
         let request = {
           user_id: jwtDecode(localStorage.getItem("jwt")).Id,
@@ -231,6 +265,11 @@ export default {
     setRating(value) {
       this.commentRating = value;
     },
+    fetchAverageRating() {
+      ReviewService.getAverageRatingForRoom(this.room.Id).then((response) => {
+        this.averageRating = response.data;
+      });
+    },
     postReview() {
       let decodedToken = jwtDecode(localStorage.getItem("jwt"));
       let createRequest = {
@@ -246,6 +285,7 @@ export default {
           this.text = "Posted successfully.";
           this.snackbar = true;
           this.fetchReviews();
+          this.fetchAverageRating();
         })
         .catch((err) => {
           this.text = err.response.data.Message;
@@ -280,7 +320,7 @@ export default {
 .info-table th {
   padding-top: 12px;
   padding-bottom: 12px;
-  text-align: left;
+  text-align: center;
   background-color: #4185f2;
   color: white;
 }

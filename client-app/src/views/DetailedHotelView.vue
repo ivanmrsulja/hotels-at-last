@@ -40,7 +40,6 @@ export default {
   mounted() {
     HotelService.getHotel(this.$route.params.id).then((response) => {
       this.hotel = response.data;
-      console.log(this.hotel);
     });
   },
 };

@@ -90,7 +90,7 @@ export default Vue.extend({
           }
         })
         .catch((err) => {
-          console.log(err);
+          that.text = err.response.data.Message;
           that.snackbar = true;
         });
     },

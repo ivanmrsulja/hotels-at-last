@@ -14,6 +14,10 @@ export class ReviewService extends BaseService {
     );
   }
 
+  async getAverageRatingForRoom(id) {
+    return axios.get(this.basePath + "/reviews/rating/" + id);
+  }
+
   async dismissReports(id) {
     return axios.patch(this.basePath + "/reviews/" + id + "/dismiss");
   }

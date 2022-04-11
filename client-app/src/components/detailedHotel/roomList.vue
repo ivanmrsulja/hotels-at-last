@@ -34,12 +34,7 @@
                 <v-icon v-if="!row.item.HasTV">mdi-close-thick</v-icon>
               </td>
               <td>
-                <v-btn
-                  color="blue"
-                  text
-                  v-bind="attrs"
-                  @click="exploreRoom(row.item.Id)"
-                >
+                <v-btn color="blue" text @click="exploreRoom(row.item.Id)">
                   Explore
                 </v-btn>
               </td>

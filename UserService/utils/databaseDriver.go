@@ -14,7 +14,7 @@ var (
 	users = []model.User{
 		{Email: "email1@email.com", Username: "admin", Password: "password1", Name: "Ivica", Surname: "Roganovic", Role: model.ADMIN, BannedUntil: time.Now()},
 		{Email: "email2@email.com", Username: "makulica", Password: "password2", Name: "Jovana", Surname: "Mustur", Role: model.USER, BannedUntil: time.Now()},
-		{Email: "email3@email.com", Username: "skafiskafnjak", Password: "password3", Name: "Marko", Surname: "Kapisoda", Role: model.USER, BannedUntil: time.Now().Add(time.Minute * 30)},
+		{Email: "email3@email.com", Username: "skafiskafnjak", Password: "password3", Name: "Marko", Surname: "Kapisoda", Role: model.USER, BannedUntil: time.Now()},
 	}
 )
 
