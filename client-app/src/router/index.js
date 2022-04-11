@@ -70,6 +70,15 @@ const routes = [
     },
   },
   {
+    path: "/hotels-admin/:id",
+    name: "HotelRoomsAdministration",
+    component: () => import("../views/RoomsAdminView.vue"),
+    meta: {
+      authenticated: true,
+      authorities: [roles.admin],
+    },
+  },
+  {
     path: "/reservations",
     name: "ReservationList",
     component: () => import("../views/ReservationListView.vue"),

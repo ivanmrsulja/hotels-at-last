@@ -48,10 +48,10 @@ func GetAllHotels(r *http.Request) ([]model.Hotel, int32) {
 
 	if err1 != nil || err2 != nil || err3 != nil || err4 != nil || err5 != nil || err6 != nil || err7 != nil {
 		utils.Db.Scopes(Paginate(r)).Find(&hotels)
-		utils.Db.Table("hotels").Select("COUNT(*)").Row().Scan(&totalResults)
+		utils.Db.Table("hotels").Where("deleted_at IS NULL").Select("COUNT(*)").Row().Scan(&totalResults)
 	} else {
 		utils.Db.Scopes(Paginate(r)).Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Find(&hotels)
-		utils.Db.Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Select("COUNT(*)").Row().Scan(&totalResults)
+		utils.Db.Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.deleted_at IS NULL AND hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Select("COUNT(*)").Row().Scan(&totalResults)
 	}
 
 	return hotels, totalResults

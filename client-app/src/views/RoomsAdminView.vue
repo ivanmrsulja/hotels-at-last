@@ -1,8 +1,11 @@
 <template>
   <v-container>
-    <v-row justify="center">
-      <v-col class="col-lg-8 col-sm-12">
-        <h2>Room list:</h2>
+    <v-row align="center" justify="center">
+      <v-col class="col-lg-10">
+        <br />
+        <v-flex class="text-center">
+          <h1>Manage Rooms For {{ hotel.Name }}</h1>
+        </v-flex>
         <br />
         <v-data-table
           :headers="headers"
@@ -34,47 +37,57 @@
                 <v-icon v-if="!row.item.HasTV">mdi-close-thick</v-icon>
               </td>
               <td>
-                <v-btn color="blue" text @click="exploreRoom(row.item.Id)">
-                  Explore
+                <v-btn color="blue" dark @click="deleteRoom(row.item.Id)">
+                  Delete
+                </v-btn>
+              </td>
+              <td>
+                <v-btn color="blue" dark @click="updateRoom(row.item.Id)">
+                  Edit
                 </v-btn>
               </td>
             </tr>
           </template>
         </v-data-table>
+        <br />
+        <v-btn
+          style="float: right"
+          color="blue"
+          dark
+          @click="createRoom(row.item.Id)"
+        >
+          Add new Room
+        </v-btn>
       </v-col>
     </v-row>
-    <br />
-    <br />
-    <br />
-    <br />
   </v-container>
 </template>
 
 <script>
-import HotelService from "../../services/hotelService.js";
+import HotelService from "../services/hotelService.js";
 
 export default {
-  name: "room-list",
+  name: "rooms-admin-view",
   data() {
     return {
       rooms: [],
+      hotel: {},
       page: 0,
       totalResults: 10,
-      totalPages: 1,
       options: {},
       loading: true,
       headers: [
         {
-          text: "Room number",
+          text: "Room Number",
           align: "start",
           sortable: false,
-          value: "RoomNumber",
         },
-        { text: "Number of beds", align: "start" },
+        { text: "Beds", align: "start" },
         { text: "Price", align: "start" },
-        { text: "Air Conditioning", align: "start" },
+        { text: "Air conditioning", align: "start" },
         { text: "Parking", align: "start" },
         { text: "TV", align: "start" },
+        { text: "Action", align: "start" },
         { text: "Action", align: "start" },
       ],
     };
@@ -82,14 +95,16 @@ export default {
   watch: {
     options: {
       handler() {
-        this.getDataFromApi();
+        this.fetchRooms();
       },
       deep: true,
     },
   },
-  mounted() {},
+  mounted() {
+    this.fetchHotel();
+  },
   methods: {
-    getDataFromApi() {
+    fetchRooms() {
       this.loading = true;
       const { sortBy, sortDesc, page, itemsPerPage } = this.options;
       HotelService.getAllRoomsForHotel(
@@ -101,8 +116,17 @@ export default {
         this.totalResults = response.data.TotalResults;
       });
     },
-    exploreRoom(id) {
-      this.$router.push("/hotels/" + this.$route.params.id + "/rooms/" + id);
+    fetchHotel() {
+      HotelService.getHotel(this.$route.params.id).then((response) => {
+        this.hotel = response.data;
+      });
+    },
+    createRoom(roomId) {},
+    updateRoom(roomId) {},
+    deleteRoom(roomId) {
+      HotelService.deleteRoom(roomId).then((response) => {
+        this.fetchRooms();
+      });
     },
   },
 };

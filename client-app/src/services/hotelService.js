@@ -26,6 +26,14 @@ class HotelService extends BaseService {
     return axios.get(this.basePath + "/rooms/" + id);
   }
 
+  async deleteHotel(id) {
+    return axios.delete(this.basePath + "/hotels/" + id);
+  }
+
+  async deleteRoom(id) {
+    return axios.delete(this.basePath + "/rooms/" + id);
+  }
+
   async searchHotels(page, size, params) {
     return axios.get(
       this.basePath +
