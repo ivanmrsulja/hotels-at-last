@@ -66,6 +66,7 @@ export default {
           this.totalPages = Math.ceil(
             response.data.TotalResults / this.pageSize
           );
+          this.$root.$emit("refreshImages");
         });
       } else {
         HotelService.getAllHotels(this.pageIndex, this.pageSize).then(
@@ -74,6 +75,7 @@ export default {
             this.totalPages = Math.ceil(
               response.data.TotalResults / this.pageSize
             );
+            this.$root.$emit("refreshImages");
           }
         );
       }

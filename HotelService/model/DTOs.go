@@ -6,10 +6,11 @@ type HotelDTO struct {
 	Address     string `json:"Address"`
 	Description string `json:"Description"`
 	Base64Image string `json:"Base64Image"`
+	Stars       int32  `json:"Stars"`
 }
 
 func (h *HotelDTO) ToHotel() Hotel {
-	return Hotel{Name: h.Name, Address: h.Address, Base64Image: h.Base64Image, Description: h.Description}
+	return Hotel{Name: h.Name, Address: h.Address, Base64Image: h.Base64Image, Description: h.Description, Stars: h.Stars}
 }
 
 type RoomDTO struct {
@@ -39,4 +40,8 @@ type HotelsPageable struct {
 type RoomsPageable struct {
 	Results      []RoomDTO `json:"Results"`
 	TotalResults int32     `json:"TotalResults"`
+}
+
+type ImageResponse struct {
+	Base64Image string `json:"Base64Image"`
 }

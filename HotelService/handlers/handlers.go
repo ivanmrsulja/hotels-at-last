@@ -107,6 +107,15 @@ func CreateHotel(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetImage(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	imagePath, _ := params["path"]
+
+	base64Image := repository.GetBase64Image("images/" + imagePath)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(model.ImageResponse{Base64Image: base64Image})
+}
+
 func UpdateHotel(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)

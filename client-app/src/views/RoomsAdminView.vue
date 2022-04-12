@@ -50,14 +50,7 @@
           </template>
         </v-data-table>
         <br />
-        <v-btn
-          style="float: right"
-          color="blue"
-          dark
-          @click="createRoom(row.item.Id)"
-        >
-          Add new Room
-        </v-btn>
+        <add-room-form></add-room-form>
       </v-col>
     </v-row>
   </v-container>
@@ -65,9 +58,11 @@
 
 <script>
 import HotelService from "../services/hotelService.js";
+import AddRoomForm from "../components/administration/addRoomForm.vue";
 
 export default {
   name: "rooms-admin-view",
+  components: { AddRoomForm },
   data() {
     return {
       rooms: [],
@@ -102,6 +97,11 @@ export default {
   },
   mounted() {
     this.fetchHotel();
+    this.$root.$on("createRoom", (request) => {
+      HotelService.createRoom(this.hotel.Id, request).then((response) => {
+        this.fetchRooms();
+      });
+    });
   },
   methods: {
     fetchRooms() {

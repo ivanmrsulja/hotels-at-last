@@ -38,6 +38,8 @@ func HandleRequests() {
 	router.HandleFunc("/api/hotels/{id}", handler.DeleteHotel).Methods("DELETE", "OPTIONS")
 	router.HandleFunc("/api/rooms/{id}", handler.DeleteRoom).Methods("DELETE", "OPTIONS")
 
+	router.HandleFunc("/api/images/{path}", handler.GetImage).Methods("GET", "OPTIONS")
+
 	// Booking Service
 	router.HandleFunc("/api/reservations", handler.CreateReservation).Methods("POST", "OPTIONS")
 	router.HandleFunc("/api/reservations/{id}/cancel", handler.CancelReservation).Methods("PUT", "OPTIONS")

@@ -26,12 +26,20 @@ class HotelService extends BaseService {
     return axios.get(this.basePath + "/rooms/" + id);
   }
 
+  async getImage(image) {
+    return axios.get(this.basePath + "/images/" + image);
+  }
+
   async deleteHotel(id) {
     return axios.delete(this.basePath + "/hotels/" + id);
   }
 
   async deleteRoom(id) {
     return axios.delete(this.basePath + "/rooms/" + id);
+  }
+
+  async createRoom(hotelId, body) {
+    return axios.post(this.basePath + "/hotels/" + hotelId + "/rooms", body);
   }
 
   async searchHotels(page, size, params) {
@@ -58,7 +66,11 @@ class HotelService extends BaseService {
         "&name=" +
         params.name +
         "&address=" +
-        params.address
+        params.address +
+        "&starsFrom=" +
+        params.starsFrom +
+        "&starsTo=" +
+        params.starsTo
     );
   }
 }

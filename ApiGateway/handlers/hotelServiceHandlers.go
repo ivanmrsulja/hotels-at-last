@@ -25,8 +25,10 @@ func GetAllHotels(w http.ResponseWriter, r *http.Request) {
 	tv := r.URL.Query().Get("tv")
 	name := r.URL.Query().Get("name")
 	address := r.URL.Query().Get("address")
+	starsFrom := r.URL.Query().Get("starsFrom")
+	starsTo := r.URL.Query().Get("starsTo")
 
-	response, err := http.Get(utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/hotels?page=" + page + "&size=" + size + "&bedsFrom=" + bedsFrom + "&bedsTo=" + bedsTo + "&priceFrom=" + priceFrom + "&priceTo=" + priceTo + "&airCond=" + airCond + "&parking=" + parking + "&tv=" + tv + "&name=" + name + "&address=" + address)
+	response, err := http.Get(utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/hotels?page=" + page + "&size=" + size + "&bedsFrom=" + bedsFrom + "&bedsTo=" + bedsTo + "&priceFrom=" + priceFrom + "&priceTo=" + priceTo + "&airCond=" + airCond + "&parking=" + parking + "&tv=" + tv + "&name=" + name + "&address=" + address + "&starsFrom=" + starsFrom + "&starsTo=" + starsTo)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)
@@ -67,6 +69,25 @@ func GetRoom(w http.ResponseWriter, r *http.Request) {
 	roomId, _ := strconv.ParseUint(params["id"], 10, 32)
 
 	response, err := http.Get(utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/rooms/" + strconv.FormatUint(uint64(roomId), 10))
+
+	if err != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
+		return
+	}
+	
+	utils.DelegateResponse(response, w)
+}
+
+func GetImage(w http.ResponseWriter, r *http.Request) {
+	utils.SetupResponse(&w, r)
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	params := mux.Vars(r)
+	image, _ := params["path"]
+
+	response, err := http.Get(utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/images/" + image)
 
 	if err != nil {
 		w.WriteHeader(http.StatusGatewayTimeout)

@@ -11,9 +11,9 @@ import (
 
 var (
 	hotels = []model.Hotel{
-		{Name: "Hotel Lux", Address: "Mihajla Pupina 132", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
-		{Name: "Hotel Vardar", Address: "Njegoseva 32", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
-		{Name: "Splendid", Address: "Topliski Put BB", Base64Image: "Image", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
+		{Name: "Hotel Lux", Stars: 4, Address: "Mihajla Pupina 132", Base64Image: "1.jpg", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
+		{Name: "Hotel Vardar", Stars: 5, Address: "Njegoseva 32", Base64Image: "2.jpg", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
+		{Name: "Splendid", Stars: 3, Address: "Topliski Put BB", Base64Image: "3.jpg", Description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."},
 	}
 	rooms = []model.Room{
 		{RoomNumber: "1", NumberOfBeds: 2, Price: 100, AirConditioned: true, HasParkingSpace: true, HotelID: 1, HasTV: true},

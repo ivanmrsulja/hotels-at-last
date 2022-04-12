@@ -3,8 +3,11 @@ package repository
 import (
 	"errors"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
+
+	"github.com/google/uuid"
 
 	model "github.com/ivanmrsulja/hotels-at-last/model"
 	utils "github.com/ivanmrsulja/hotels-at-last/utils"
@@ -43,15 +46,17 @@ func GetAllHotels(r *http.Request) ([]model.Hotel, int32) {
 	airCond, err5 := strconv.ParseBool(r.URL.Query().Get("airCond"))
 	parking, err6 := strconv.ParseBool(r.URL.Query().Get("parking"))
 	tv, err7 := strconv.ParseBool(r.URL.Query().Get("tv"))
+	starsFrom, err8 := strconv.Atoi(r.URL.Query().Get("starsFrom"))
+	starsTo, err9 := strconv.Atoi(r.URL.Query().Get("starsTo"))
 	
 	var totalResults int32
 
-	if err1 != nil || err2 != nil || err3 != nil || err4 != nil || err5 != nil || err6 != nil || err7 != nil {
+	if err1 != nil || err2 != nil || err3 != nil || err4 != nil || err5 != nil || err6 != nil || err7 != nil || err8 != nil || err9 != nil {
 		utils.Db.Scopes(Paginate(r)).Find(&hotels)
 		utils.Db.Table("hotels").Where("deleted_at IS NULL").Select("COUNT(*)").Row().Scan(&totalResults)
 	} else {
-		utils.Db.Scopes(Paginate(r)).Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Find(&hotels)
-		utils.Db.Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.deleted_at IS NULL AND hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv).Group("hotels.id").Select("COUNT(*)").Row().Scan(&totalResults)
+		utils.Db.Scopes(Paginate(r)).Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ? AND hotels.stars > ? AND hotels.stars < ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv, starsFrom, starsTo).Group("hotels.id").Find(&hotels)
+		utils.Db.Table("hotels").Joins("JOIN rooms ON rooms.hotel_id = hotels.id").Where("hotels.deleted_at IS NULL AND hotels.name LIKE ? AND hotels.address LIKE ? AND rooms.number_of_beds BETWEEN ? AND ? AND rooms.price BETWEEN ? AND ? AND rooms.air_conditioned = ? AND rooms.has_parking_space = ? AND rooms.has_tv = ? AND hotels.stars > ? AND hotels.stars < ?", name, address, bedsFrom, bedsTo, priceFrom, priceTo, airCond, parking, tv, starsFrom, starsTo).Group("hotels.id").Select("COUNT(*)").Row().Scan(&totalResults)
 	}
 
 	return hotels, totalResults
@@ -96,6 +101,18 @@ func FindHotel(id uint) (model.Hotel, error) {
 }
 
 func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
+
+	uuidWithHyphen := uuid.New()
+	uuid := strings.Replace(uuidWithHyphen.String(), "-", "", -1)
+	filename := uuid + ".jpeg"
+    utils.ToJPG(newHotel.Base64Image, "images/" + filename)
+
+	newHotel.Base64Image = filename
+
+	if newHotel.Stars <= 0 || newHotel.Stars > 5 {
+		return newHotel, errors.New("Stars must be an integer between 1 and 5.")
+	}
+
 	createdHotel := utils.Db.Create(&newHotel)
 
 	if createdHotel.Error != nil {
@@ -103,6 +120,10 @@ func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
 	}
 
 	return newHotel, nil
+}
+
+func GetBase64Image(image string) string {
+	return utils.GetB64Image(image)
 }
 
 func CreateRoom(newRoom model.Room) (model.Room, error) {
@@ -140,14 +161,21 @@ func UpdateHotel(hotel model.Hotel, id uint) error {
 		return errors.New("Hotel with ID " + strconv.FormatUint(uint64(id), 10) + " does not exist.")
 	}
 
+	if hotel.Stars <= 0 || hotel.Stars > 5 {
+		return errors.New("Stars must be an integer between 1 and 5.")
+	}
+
 	if strings.Trim(hotel.Name, " ") == "" || strings.Trim(hotel.Description, " ") == "" || strings.Trim(hotel.Address, " ") == "" {
 		return errors.New("There should be no empty fields, you know better :)")
 	}
+
 	hotelToUpdate.Name = hotel.Name
 	hotelToUpdate.Address = hotel.Address
 	hotelToUpdate.Description = hotel.Description
+	hotelToUpdate.Stars = hotel.Stars
 	if hotel.Base64Image != "" {
-		hotelToUpdate.Base64Image = hotel.Base64Image
+		_ = os.Remove("images/" + hotelToUpdate.Base64Image)
+		utils.ToJPG(hotel.Base64Image, "images/" + hotelToUpdate.Base64Image)
 	}
 	result := utils.Db.Save(&hotelToUpdate)
 

@@ -15,6 +15,8 @@ func HandleRequests() {
 	router.HandleFunc("/api/hotels/{id}/rooms", handler.GetAllRoomsForHotel).Methods("GET")
 	router.HandleFunc("/api/rooms/{id}", handler.GetRoom).Methods("GET")
 	router.HandleFunc("/api/hotels/{id}", handler.GetHotel).Methods("GET")
+
+	router.HandleFunc("/api/images/{path}", handler.GetImage).Methods("GET")
 	
 	router.HandleFunc("/api/hotels", handler.CreateHotel).Methods("POST")
 	router.HandleFunc("/api/hotels/{id}/rooms", handler.CreateRoomForHotel).Methods("POST")

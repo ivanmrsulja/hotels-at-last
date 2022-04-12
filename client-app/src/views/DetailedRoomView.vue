@@ -55,7 +55,9 @@
         ></v-data-table>
         <br />
         <br />
-        <reservation-form v-if="userLoggedIn"></reservation-form>
+        <reservation-form
+          v-if="userLoggedIn && userRole < 1"
+        ></reservation-form>
         <br />
         <br />
         <h2 v-if="reviewTotalPages > 0">Reviews:</h2>
@@ -183,6 +185,7 @@ export default {
       text: "",
       timeout: 2000,
       userLoggedIn: false,
+      userRole: -1,
       userId: 0,
       reservationCount: 0,
       averageRating: 0,
@@ -196,7 +199,9 @@ export default {
 
       this.userLoggedIn = AuthenticationService.userLoggedIn();
       if (this.userLoggedIn) {
-        this.userId = jwtDecode(localStorage.getItem("jwt")).Id;
+        let decodedToken = jwtDecode(localStorage.getItem("jwt"));
+        this.userId = decodedToken.Id;
+        this.userRole = decodedToken.role;
         ReservationService.getCountForUserAndRoom(
           this.userId,
           this.room.Id

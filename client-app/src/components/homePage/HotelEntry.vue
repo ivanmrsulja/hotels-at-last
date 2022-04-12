@@ -1,12 +1,19 @@
 <template>
   <v-container>
     <v-card class="mx-auto" max-width="600">
-      <v-img
-        src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-        height="200px"
-      ></v-img>
+      <v-img :src="image" height="200px"></v-img>
 
-      <v-card-title> {{ hotel.Name }} </v-card-title>
+      <v-card-title>
+        {{ hotel.Name }}
+        <v-spacer></v-spacer>
+        <v-rating
+          color="orange"
+          length="5"
+          size="16"
+          :value="hotel.Stars"
+          readonly
+        ></v-rating
+      ></v-card-title>
 
       <v-card-subtitle> {{ hotel.Address }} </v-card-subtitle>
 
@@ -38,17 +45,31 @@
 </template>
 
 <script>
+import HotelService from "../../services/hotelService.js";
+
 export default {
   name: "hotel-entry",
   props: ["hotel"],
   data() {
     return {
       show: false,
+      image: "",
     };
+  },
+  mounted() {
+    this.fetchImage();
+    this.$root.$on("refreshImages", () => {
+      this.fetchImage();
+    });
   },
   methods: {
     hotelDetailed(id) {
       this.$router.push("/hotels/" + id);
+    },
+    fetchImage() {
+      HotelService.getImage(this.hotel.Base64Image).then((response) => {
+        this.image = response.data.Base64Image;
+      });
     },
   },
 };

@@ -22,6 +22,14 @@
           <td><input type="number" v-model="bedsTo" /></td>
         </tr>
         <tr>
+          <td>Stars from:</td>
+          <td><input type="number" v-model="starsFrom" /></td>
+        </tr>
+        <tr>
+          <td>Stars to:</td>
+          <td><input type="number" v-model="starsTo" /></td>
+        </tr>
+        <tr>
           <td>Price from:</td>
           <td><input type="number" v-model="priceFrom" /></td>
         </tr>
@@ -73,6 +81,8 @@ export default {
       airCond: false,
       parking: false,
       tv: false,
+      starsFrom: 1,
+      starsTo: 5,
     };
   },
   methods: {
@@ -93,6 +103,8 @@ export default {
         airCond: this.airCond,
         parking: this.parking,
         tv: this.tv,
+        starsFrom: this.starsFrom,
+        starsTo: this.starsTo,
       };
       this.$root.$emit("search", searchRequest);
     },
