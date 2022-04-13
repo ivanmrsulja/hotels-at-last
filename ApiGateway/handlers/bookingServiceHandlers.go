@@ -36,6 +36,11 @@ func GetAllReservationsForUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if utils.AuthorizeRole(r, "user") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	params := mux.Vars(r)
 	userId, _ := strconv.ParseUint(params["id"], 10, 32)
 	response, err := http.Get(utils.BaseBookingServicePathRoundRobin.Next().Host + "/api/reservations/user/" + strconv.FormatUint(uint64(userId), 10))
@@ -73,6 +78,11 @@ func CancelReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if utils.AuthorizeRole(r, "user") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	params := mux.Vars(r)
 	reservationId, _ := strconv.ParseUint(params["id"], 10, 32)
 
@@ -95,6 +105,11 @@ func CreateReservation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if utils.AuthorizeRole(r, "user") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	var request model.CreateReservationRequest
 	data, _ := ioutil.ReadAll(r.Body)
 	json.NewDecoder(bytes.NewReader(data)).Decode(&request)
@@ -113,13 +128,13 @@ func CreateReservation(w http.ResponseWriter, r *http.Request) {
 
 	responseRoom, errRoom := http.Get(utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/rooms/" + strconv.FormatUint(uint64(request.RoomId), 10))
 
-	if responseRoom.StatusCode != 200 {
-		w.WriteHeader(http.StatusBadRequest)
+	if errRoom != nil {
+		w.WriteHeader(http.StatusGatewayTimeout)
 		return
 	}
 
-	if errRoom != nil {
-		w.WriteHeader(http.StatusGatewayTimeout)
+	if responseRoom.StatusCode != 200 {
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

@@ -122,6 +122,11 @@ func CreateHotel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	req, _ := http.NewRequest(http.MethodPost, utils.BaseHotelServicePathRoundRobin.Next().Host + "/api/hotels", r.Body)
 	req.Header.Set("Accept", "application/json")
 	client := &http.Client{}
@@ -138,6 +143,11 @@ func CreateHotel(w http.ResponseWriter, r *http.Request) {
 func CreateRoomForHotel(w http.ResponseWriter, r *http.Request) {
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
+		return
+	}
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -163,6 +173,11 @@ func UpdateHotel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
 
@@ -182,6 +197,11 @@ func UpdateHotel(w http.ResponseWriter, r *http.Request) {
 func UpdateRoom(w http.ResponseWriter, r *http.Request) {
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
+		return
+	}
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
@@ -207,6 +227,11 @@ func DeleteHotel(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	params := mux.Vars(r)
 	hotelId, _ := strconv.ParseUint(params["id"], 10, 32)
 
@@ -226,6 +251,11 @@ func DeleteHotel(w http.ResponseWriter, r *http.Request) {
 func DeleteRoom(w http.ResponseWriter, r *http.Request) {
 	utils.SetupResponse(&w, r)
 	if r.Method == "OPTIONS" {
+		return
+	}
+
+	if utils.AuthorizeRole(r, "admin") != nil {
+		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
 
