@@ -47,7 +47,7 @@ class HotelService extends BaseService {
   }
 
   async createHotel(body) {
-    return axios.post(this.basePath + "/hotels/", body);
+    return axios.post(this.basePath + "/hotels", body);
   }
 
   async updateHotel(hotelId, body) {

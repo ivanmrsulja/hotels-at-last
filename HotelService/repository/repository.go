@@ -1,9 +1,10 @@
 package repository
 
 import (
+	"bytes"
+	"encoding/json"
 	"errors"
 	"net/http"
-	"os"
 	"strconv"
 	"strings"
 
@@ -105,7 +106,12 @@ func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
 	uuidWithHyphen := uuid.New()
 	uuid := strings.Replace(uuidWithHyphen.String(), "-", "", -1)
 	filename := uuid + ".jpeg"
-    utils.ToJPG(newHotel.Base64Image, "images/" + filename)
+    // utils.ToJPG(newHotel.Base64Image, "images/" + filename)
+
+	body := model.ImageResponse{Base64Image: newHotel.Base64Image}
+	reqBodyBytes := new(bytes.Buffer)
+	json.NewEncoder(reqBodyBytes).Encode(body)
+	http.Post("http://localhost:8084/api/images/" + filename, "application/json", bytes.NewReader(reqBodyBytes.Bytes()))
 
 	newHotel.Base64Image = filename
 
@@ -123,7 +129,11 @@ func CreateHotel(newHotel model.Hotel) (model.Hotel, error) {
 }
 
 func GetBase64Image(image string) string {
-	return utils.GetB64Image(image)
+	// return utils.GetB64Image(image)
+	response, _ := http.Get("http://localhost:8084/api/images/" + image)
+	var imageResponse model.ImageResponse
+	json.NewDecoder(response.Body).Decode(&imageResponse)
+	return imageResponse.Base64Image
 }
 
 func CreateRoom(newRoom model.Room) (model.Room, error) {
@@ -174,8 +184,12 @@ func UpdateHotel(hotel model.Hotel, id uint) error {
 	hotelToUpdate.Description = hotel.Description
 	hotelToUpdate.Stars = hotel.Stars
 	if hotel.Base64Image != "" {
-		_ = os.Remove("images/" + hotelToUpdate.Base64Image)
-		utils.ToJPG(hotel.Base64Image, "images/" + hotelToUpdate.Base64Image)
+		// _ = os.Remove("images/" + hotelToUpdate.Base64Image)
+		// utils.ToJPG(hotel.Base64Image, "images/" + hotelToUpdate.Base64Image)
+		body := model.ImageResponse{Base64Image: hotel.Base64Image}
+		reqBodyBytes := new(bytes.Buffer)
+		json.NewEncoder(reqBodyBytes).Encode(body)
+		http.Post("http://localhost:8084/api/images/" + hotelToUpdate.Base64Image, "application/json", bytes.NewReader(reqBodyBytes.Bytes()))
 	}
 	result := utils.Db.Save(&hotelToUpdate)
 
