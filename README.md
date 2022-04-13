@@ -4,7 +4,7 @@ HotelsAtLast je web aplikacija za rezervaciju hotelskih soba zasnovana na mikros
 ## Funkcionalnosti
 
 ### Neregistrovan korisnik
-Može da vidi i pretražuje sve hotele u sistemu (pretraga se vrši prema cijeni od-do, broju ljudi koji mogu stati u sobu od-do, imenu, adresi, posedovanje parking mesta, klima uređaja, TV, mašina...) kao i da vidi njihovu ponudu (sobe). Pružena mu je mogućnost registacije kao i prijave na sistem.
+Može da vidi i pretražuje sve hotele u sistemu (pretraga se vrši prema cijeni od-do, broju ljudi koji mogu stati u sobu od-do, imenu, adresi, posedovanje parking mesta, klima uređaja, TV, broju zvjezdica...) kao i da vidi njihovu ponudu (sobe). Pružena mu je mogućnost registacije kao i prijave na sistem.
 
 ### Registrovan korisnik
 Nakon uspješne registracije i prijave, korisnik pored pregleda i pretrage hotela i pregleda njihovih ponuda (soba) ima mogućnost pregleda rezervacija te sobe kao i mogućnost rezervacije sobe na određen vremenski period ako je ona dostupna u istom. Korisniku je dostupna i opcija poništavanja rezervacije maksimalno 2 dana pre početka iste. Nakon provedenog boravka, korisnik može dati recenziju hotela uz ostavljanje komentara i ocjene od 1 do 5. Korisnik može prijaviti (njemu) nedolične komentare koji će biti poslati na uvid administratoru sistema.
