@@ -42,15 +42,21 @@
                 </v-btn>
               </td>
               <td>
-                <v-btn color="blue" dark @click="updateRoom(row.item.Id)">
-                  Edit
-                </v-btn>
+                <add-room-form
+                  style="float: left"
+                  :edit="true"
+                  :roomData="row.item"
+                ></add-room-form>
               </td>
             </tr>
           </template>
         </v-data-table>
         <br />
-        <add-room-form></add-room-form>
+        <add-room-form
+          style="float: right"
+          :edit="false"
+          :roomData="{}"
+        ></add-room-form>
       </v-col>
     </v-row>
   </v-container>
@@ -98,9 +104,10 @@ export default {
   mounted() {
     this.fetchHotel();
     this.$root.$on("createRoom", (request) => {
-      HotelService.createRoom(this.hotel.Id, request).then((response) => {
-        this.fetchRooms();
-      });
+      this.createRoom(request);
+    });
+    this.$root.$on("updateRoom", (request) => {
+      this.updateRoom(request);
     });
   },
   methods: {
@@ -121,8 +128,18 @@ export default {
         this.hotel = response.data;
       });
     },
-    createRoom(roomId) {},
-    updateRoom(roomId) {},
+    createRoom(request) {
+      HotelService.createRoom(this.hotel.Id, request).then((response) => {
+        this.fetchRooms();
+      });
+    },
+    updateRoom(request) {
+      HotelService.updateRoom(request.roomId, request.requestBody).then(
+        (response) => {
+          this.fetchRooms();
+        }
+      );
+    },
     deleteRoom(roomId) {
       HotelService.deleteRoom(roomId).then((response) => {
         this.fetchRooms();

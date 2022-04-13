@@ -3,11 +3,14 @@ package utils
 import (
 	"bytes"
 	"encoding/base64"
+	"image"
 	"image/jpeg"
+	"image/png"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"strings"
 )
 
 func toBase64(b []byte) string {
@@ -35,12 +38,22 @@ func GetB64Image(image string) string {
 }
 
 func ToJPG(base64Image string, filePath string) {
-	unbased, _ := base64.StdEncoding.DecodeString(base64Image)
+	coI := strings.Index(string(base64Image), ",")
+	mimeType := strings.TrimSuffix(base64Image[5:coI], ";base64")
+	rawImage := string(base64Image)[coI+1:]
+	
+	unbased, _ := base64.StdEncoding.DecodeString(rawImage)
 	r := bytes.NewReader(unbased)
-	im, err := jpeg.Decode(r)
-	if err != nil {
-		log.Fatal(err)
+
+	var im image.Image
+	
+	switch mimeType {
+	case "image/jpeg":
+		im, _ = jpeg.Decode(r)
+	case "image/png":
+		im, _ = png.Decode(r)
 	}
+	
     f, _ := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0777)
     _ = jpeg.Encode(f, im, &jpeg.Options{Quality: 75})
 }

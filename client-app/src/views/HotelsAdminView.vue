@@ -21,6 +21,15 @@
               <td>{{ row.item.Address }}</td>
               <td>{{ row.item.Description | restrict }}</td>
               <td>
+                <v-rating
+                  color="orange"
+                  length="5"
+                  size="15"
+                  :value="row.item.Stars"
+                  readonly
+                ></v-rating>
+              </td>
+              <td>
                 <v-btn color="blue" dark @click="exploreRooms(row.item.Id)">
                   Explore rooms
                 </v-btn>
@@ -31,22 +40,21 @@
                 </v-btn>
               </td>
               <td>
-                <v-btn color="blue" dark @click="updateHotel(row.item.Id)">
-                  Edit
-                </v-btn>
+                <add-hotel-form
+                  style="float: left"
+                  :edit="true"
+                  :hotelData="row.item"
+                ></add-hotel-form>
               </td>
             </tr>
           </template>
         </v-data-table>
         <br />
-        <v-btn
+        <add-hotel-form
           style="float: right"
-          color="blue"
-          dark
-          @click="createHotel(row.item.Id)"
-        >
-          Add new Hotel
-        </v-btn>
+          :edit="false"
+          :hotelData="{}"
+        ></add-hotel-form>
       </v-col>
     </v-row>
   </v-container>
@@ -54,9 +62,11 @@
 
 <script>
 import HotelService from "../services/hotelService.js";
+import AddHotelForm from "../components/administration/addHotelForm.vue";
 
 export default {
   name: "hotels-admin-view",
+  components: { AddHotelForm },
   data() {
     return {
       hotels: [],
@@ -72,6 +82,7 @@ export default {
         },
         { text: "Address", align: "start" },
         { text: "Description", align: "start" },
+        { text: "Stars", align: "start" },
         { text: "Action", align: "start" },
         { text: "Action", align: "start" },
         { text: "Action", align: "start" },
@@ -90,11 +101,19 @@ export default {
     restrict: function (value) {
       if (!value) return "";
       value = value.toString();
-      if (value.length <= 100) {
+      if (value.length <= 70) {
         return value;
       }
-      return value.substring(0, 100) + "...";
+      return value.substring(0, 70) + "...";
     },
+  },
+  mounted() {
+    this.$root.$on("createHotel", (request) => {
+      this.createHotel(request);
+    });
+    this.$root.$on("updateHotel", (request) => {
+      this.updateHotel(request);
+    });
   },
   methods: {
     fetchHotels() {
@@ -113,8 +132,18 @@ export default {
         this.fetchHotels();
       });
     },
-    updateHotel(hotelId) {},
-    createHotel(hotelId) {},
+    updateHotel(request) {
+      HotelService.updateHotel(request.hotelId, request.requestBody).then(
+        (response) => {
+          this.fetchHotels();
+        }
+      );
+    },
+    createHotel(request) {
+      HotelService.createHotel(request).then((response) => {
+        this.fetchHotels();
+      });
+    },
   },
 };
 </script>
