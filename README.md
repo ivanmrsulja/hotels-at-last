@@ -24,4 +24,6 @@ Review service - mikroservis koji je zadužen za CRUD operacije nad recenzijama.
 
 Booking service - mikroservis koji je zadužen za rezervacije. Tehnologije: Rust, PostgreSQL baza
 
+Image service - mikroservis koji je zadužen za čuvanje slika. Tehnologija: Go
+
 Klijentska aplikacija - klijentska aplikacija koja komunicira sa API gateway-om. Tehnologija: Vue.js
