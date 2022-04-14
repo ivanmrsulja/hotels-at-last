@@ -50,10 +50,11 @@ func ToJPG(base64Image string, filePath string) {
 	switch mimeType {
 	case "image/jpeg":
 		im, _ = jpeg.Decode(r)
+		f, _ := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0777)
+    	_ = jpeg.Encode(f, im, &jpeg.Options{Quality: 75})
 	case "image/png":
 		im, _ = png.Decode(r)
+		f, _ := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0777)
+    	_ = png.Encode(f, im)
 	}
-	
-    f, _ := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0777)
-    _ = jpeg.Encode(f, im, &jpeg.Options{Quality: 75})
 }
