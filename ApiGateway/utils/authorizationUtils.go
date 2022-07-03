@@ -13,7 +13,7 @@ func AuthorizeRole(r *http.Request, role string) error {
 	values := r.Header.Values("Authorization")
 
 	if len(values) == 0 {
-		return errors.New("Unauthorised")
+		return errors.New("Unauthorized")
 	}
 
 	authRequest.Header.Set("Authorization", values[0])
@@ -25,7 +25,7 @@ func AuthorizeRole(r *http.Request, role string) error {
 	}
 
 	if authResponse.StatusCode != 200 {
-		return errors.New("Unauthorised")
+		return errors.New("Unauthorized")
 	}
 
 	return nil
